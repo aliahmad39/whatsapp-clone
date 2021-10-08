@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "950227930092",
+    "project_id": "unique-whatsapp",
+    "storage_bucket": "unique-whatsapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:950227930092:android:be58ab60865725fc2e0ec9",
+        "android_client_info": {
+          "package_name": "com.UniqueBulleteSolutions.whatsapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "950227930092-ne791e7ol63uud4fcr38uicuv3jv8d4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFzRib8LUD6lm78PCI21mfOXYUACrhLJc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "950227930092-ne791e7ol63uud4fcr38uicuv3jv8d4n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

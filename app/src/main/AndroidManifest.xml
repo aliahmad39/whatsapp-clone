@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.UniqueBulleteSolutions.whatsapp">
+
+
+
+    <uses-permission android:name="android.permission.MANAGE_OWN_CALLS" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+
+
+
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+
+
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.WhatsApp"
+        android:usesCleartextTraffic="true">
+
+        <activity android:name=".SplashActivity"></activity>
+        <activity android:name=".GroupInfoActivity" />
+        <activity android:name=".SelectContactActivity" />
+        <activity android:name=".PhoneNumberActivity"
+            android:windowSoftInputMode="stateVisible">
+
+
+
+        </activity>
+        <activity android:name=".OTPActivity"
+            android:windowSoftInputMode="stateVisible"/>
+        <activity
+            android:name=".GroupChatActivity"
+            android:theme="@style/Theme.WhatsApp_NoActionBar" />
+        <activity android:name=".ShowImageMessageActivity" />
+        <activity
+            android:name=".MakeGroupActivity"
+            android:theme="@style/Theme.WhatsApp_NoActionBar" />
+        <activity android:name=".ReviewSendImageActivity" />
+        <activity
+            android:name=".MakeCallActivity"
+            android:theme="@style/Theme.WhatsApp_NoActionBar" />
+        <activity android:name=".SettingActivity" />
+        <activity
+            android:name=".ChatDetailActivity"
+            android:theme="@style/Theme.WhatsApp_NoActionBar" />
+        <activity android:name=".MainActivity" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+
+        </activity>
+
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.UniqueBulleteSolutions.whatsapp.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_path" />
+        </provider>
+    </application>
+
+</manifest>
