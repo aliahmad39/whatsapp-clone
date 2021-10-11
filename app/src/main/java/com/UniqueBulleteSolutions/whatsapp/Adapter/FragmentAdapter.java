@@ -11,12 +11,12 @@ import com.UniqueBulleteSolutions.whatsapp.fragment.ChatFragment;
 import com.UniqueBulleteSolutions.whatsapp.fragment.StatusFragment;
 
 public class FragmentAdapter extends FragmentPagerAdapter {
-    String CUID;
+   // String CUID;
     int tabCount;
 
-    public FragmentAdapter(@NonNull FragmentManager fm, int behavior, String CUID) {
+    public FragmentAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
-        this.CUID = CUID;
+     //   this.CUID = CUID;
         tabCount = behavior;
     }
 

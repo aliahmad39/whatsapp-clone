@@ -277,7 +277,7 @@ public class SettingActivity extends AppCompatActivity {
 
 
 
-        String path = ApiClient.BASE_URL+"ApiAuthentication/profileImages/" + pic;
+        String path = ApiClient.BASE_URL+"/profileImages/" + pic;
         Picasso.get().load(path).
                 placeholder(R.drawable.avatar).into(binding.userProfileImage);
 

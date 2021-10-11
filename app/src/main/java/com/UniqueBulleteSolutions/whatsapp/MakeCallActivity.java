@@ -120,6 +120,7 @@ public class MakeCallActivity extends AppCompatActivity {
                         permissionToken.continuePermissionRequest();
                     }
                 }).check();
+
     }
 
     private void getContact() {

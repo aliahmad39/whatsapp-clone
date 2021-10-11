@@ -63,11 +63,15 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
+import static java.lang.Thread.sleep;
 
 
 public class ChatFragment extends Fragment {
@@ -96,6 +100,7 @@ public class ChatFragment extends Fragment {
     private  ArrayList<String> ids = new ArrayList<>();
     private  ArrayList<setClass>  setclass = new ArrayList<setClass>();
     HashSet<String> set = new HashSet<>();
+    int x = 2;
 
     ArrayList<String> number = new ArrayList<>();
     private static ArrayList<Users> contacts = new ArrayList<>();
@@ -118,23 +123,84 @@ public class ChatFragment extends Fragment {
           Permissions permissions = new Permissions();
           if(permissions.ContactPermissions(getContext())){
               getContact();
+              CUID = MainActivity.getCUID();
+              MainActivity.pos = 0;
+
+              Retrofit retrofit = ApiClient.getClient();
+              apiInterface = retrofit.create(ApiInterface.class);
+
+              loadData();
+
+              adapter = new UserAdapter(data, getContext(), CUID);
+              LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+              binding.chatRecyclerView.setLayoutManager(layoutManager);
+              binding.chatRecyclerView.setAdapter(adapter);
+
+              getServerUsersMessages();
+
+              Thread thread = new Thread(new Runnable() {
+                  @Override
+                  public void run() {
+                      while (x >= 0) {
+                          getServerUsersMessages();
+//                          handler.post(new Runnable() {
+//                              @Override
+//                              public void run() {
+//                                  if(!binding.etMessage.getText().toString().isEmpty())
+//                                      binding.etMessage.requestFocus();
+//                                  apiInterface.getStatus(receiverId).enqueue(new Callback<Users>() {
+//                                      @Override
+//                                      public void onResponse(Call<Users> call, Response<Users> response) {
+//                                          if (response != null) {
+//                                              if (response.body().getStatus().equals("1")) {
+//                                                  if (response.body().getUserStatus() != null) {
+//                                                      if (response.body().getUserStatus().equals("offline")) {
+//                                                          binding.tvTyping.setVisibility(View.GONE);
+//                                                      } else {
+//                                                          binding.tvTyping.setText(response.body().getUserStatus().toString());
+//                                                          binding.tvTyping.setVisibility(View.VISIBLE);
+//                                                      }
+//                                                  }
+//                                              }
+//                                          }
+//                                      }
+//                                      @Override
+//                                      public void onFailure(Call<Users> call, Throwable t) {
+//
+//                                      }
+//                                  });
+//                              }
+//                          });
+
+                          try {
+                              sleep(2000);
+                          } catch (Exception e) {
+                              e.printStackTrace();
+                          }
+                      }
+                  }
+              });
+              thread.start();
+
+//              new Timer().scheduleAtFixedRate(new TimerTask() {
+//                  @Override
+//                  public void run() {
+//                      getServerUsersMessages();
+////                      runOnUiThread(new Runnable() {
+////                          @Override
+////                          public void run() {
+////                              getMessages();
+////                              //      Toast.makeText(ChatDetailActivity.this, "timer called", Toast.LENGTH_SHORT).show();
+////
+////                          }
+////                      });
+//
+//                  }
+//              }, 0, 100);
+
+            //  loadData();
           }
 
-        CUID = MainActivity.getCUID();
-        MainActivity.pos = 0;
-
-
-        Retrofit retrofit = ApiClient.getClient();
-        apiInterface = retrofit.create(ApiInterface.class);
-
-
-        getServerUsersMessages();
-
-        loadData();
-        adapter = new UserAdapter(data, getContext(), CUID);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        binding.chatRecyclerView.setLayoutManager(layoutManager);
-        binding.chatRecyclerView.setAdapter(adapter);
 
         return binding.getRoot();
     }
@@ -142,7 +208,6 @@ public class ChatFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         apiInterface.setStatus("online", CUID).enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
@@ -245,13 +310,10 @@ public class ChatFragment extends Fragment {
                 try {
                     if (response != null) {
                         if (response.body().getStatus().equals("1")) {
-
                             data.clear();
                             messageList = response.body().getMessagelist();
                             groupList = response.body().getGroupList();
                             list =  response.body().getShowUser();
-
-
 
                             for (MessageModel chat : messageList) {
                                 if (!chat.getSender_id().equals(CUID)) {
@@ -274,6 +336,7 @@ public class ChatFragment extends Fragment {
                                         }
                                         users.setIndex("user");
                                         data.add(users);
+                                        adapter.notifyDataSetChanged();
                                         break;
                                     }
                                 }
@@ -296,14 +359,14 @@ public class ChatFragment extends Fragment {
                         }
                     }
                 }catch (Exception e) {
-                    Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
-                // getUsers();
-                Toast.makeText(getContext(), "Error :" + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                loadData();
+                adapter.notifyDataSetChanged();
+               // Toast.makeText(getContext(), "Error :" + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -327,10 +390,9 @@ public class ChatFragment extends Fragment {
 
         data = gson.fromJson(json , type);
 
-
-        if(data == null){
-            data = new ArrayList<>();
-        }
+//        if(data == null){
+//            data = new ArrayList<>();
+//        }
     }
 
 
@@ -373,7 +435,12 @@ public class ChatFragment extends Fragment {
                         binding.fab.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                               // Intent intent = new Intent(getContext(), MakeCallActivity.class);
+                              //  startActivity(intent);
+                             //   ((Activity)getContext()).finish();
+
                                 startActivity(new Intent(getContext(), MakeCallActivity.class));
+
                             }
                         });
 

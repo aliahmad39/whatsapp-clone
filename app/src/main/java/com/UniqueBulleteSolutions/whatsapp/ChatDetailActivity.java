@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import org.apache.commons.io.FileUtils;
 
 import android.Manifest;
-    import android.app.AlertDialog;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -91,6 +91,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -103,16 +105,18 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static java.lang.Thread.sleep;
 
 public class ChatDetailActivity extends AppCompatActivity {
 
     ActivityChatDetailBinding binding;
     private List<MessageModel> list = new ArrayList<>();
-   private ArrayList<MessageModel> data;
+    private ArrayList<MessageModel> data = new ArrayList<>();
     ChatAdapter chatAdapter;
     private static final int REQUEST_CODE_PERMISSION = 332;
     private static final int SELECT_VIDEO = 3;
     MediaPlayer player;
+    //    NullPointerException  nullPointer = new NullPointerException();
     private static DecimalFormat df2 = new DecimalFormat("#.##");
 
 
@@ -120,6 +124,8 @@ public class ChatDetailActivity extends AppCompatActivity {
     String encodedImage;
     Uri sFile;
     String videoPath;
+    private RecordView recordView;
+    int x =0;
 
 
     FirebaseDatabase database;
@@ -135,14 +141,16 @@ public class ChatDetailActivity extends AppCompatActivity {
     private static final int SELECT_FILE = 23;
     private static final int SELECT_AUDIO = 43;
     private String size;
+    Thread thread;
 
     ApiInterface apiInterface;
     FloatingActionButton fab;
 
     //    private MediaRecorder mediaRecorder;
     private String audio_path;
-//    private String sTime;
-
+    //    private String sTime;
+    Handler handler = new Handler();
+    Runnable runnable;
 
     private AudioRecorder audioRecorder;
     private File recordFile;
@@ -157,17 +165,9 @@ public class ChatDetailActivity extends AppCompatActivity {
         Retrofit retrofit = ApiClient.getClient();
         apiInterface = retrofit.create(ApiInterface.class);
         fab = findViewById(R.id.fabSend);
-       // checkPermissionFromDevice();
-
+        // checkPermissionFromDevice();
 
         setSupportActionBar(binding.toolbar);
-
-
-        dialog = new ProgressDialog(this);
-        dialog.setMessage("Uploading image...");
-        dialog.setCancelable(false);
-        getMessages();
-
 
         receiverId = getIntent().getStringExtra("userId");
         userName = getIntent().getStringExtra("userName");
@@ -175,20 +175,172 @@ public class ChatDetailActivity extends AppCompatActivity {
         userStatus = getIntent().getStringExtra("currentUStatus");
         String path = ApiClient.BASE_URL + "ApiAuthentication/profileImages/" + getIntent().getStringExtra("currentUPic");
 
-
+        Toast.makeText(this, "CUID :"+senderId, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "RID :"+receiverId, Toast.LENGTH_SHORT).show();
 
         binding.userName.setText(userName);
 
         Picasso.get().load(path).placeholder(R.drawable.avatar).into(binding.profileImage);
-
         loadData();
 
 
-        chatAdapter = new ChatAdapter(data, this, senderId, receiverId, binding.imagelayout, binding.userChatImage);
+//        Handler handler = new Handler();
+//
+//               new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Runnable runnable = new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        this.recreate();
+//                    }
+//                };
+//
+//            }
+//        }).start();
 
+        dialog = new ProgressDialog(this);
+        dialog.setMessage("Uploading image...");
+        dialog.setCancelable(false);
+
+        chatAdapter = new ChatAdapter(data, this, senderId, receiverId, binding.imagelayout, binding.userChatImage);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.chatdetailRecyclerView.setLayoutManager(layoutManager);
         binding.chatdetailRecyclerView.setAdapter(chatAdapter);
+
+//        new Thread()
+//        {
+//            public void run()
+//            {
+//                ChatDetailActivity.this.runOnUiThread(new Runnable()
+//                {
+//                    public void run()
+//                    {
+//                        while (x >= 0){
+//                            try {
+//                                sleep(1000);
+//                                getMessages();
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
+//
+//                        }
+//
+//                        //Do your UI operations like dialog opening or Toast here
+//                    }
+//                });
+//            }
+//        }.start();
+
+//        runnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                getMessages();
+//            }
+//        };
+//        handler.post(runnable);
+//        thread =new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//             //   getMessages();
+////                while (x >= 0){
+////                    try {
+////                        sleep(1000);
+////                        getMessages();
+////                    } catch (InterruptedException e) {
+////                        e.printStackTrace();
+////                    }
+////
+////                }
+////                Toast.makeText(ChatDetailActivity.this, "hello", Toast.LENGTH_SHORT).show();
+////                try {
+////                    while(true){
+////                        getMessages();
+////                    }
+////
+////                } catch (Exception e) {
+////
+//////                    Toast.makeText(ChatDetailActivity.this, "thread catch run", Toast.LENGTH_SHORT).show();
+////                   // thread.start();
+////                }
+//
+//            }
+//        });
+
+//thread.start();
+
+
+//         getMessages();
+
+//        new Timer().scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//                getMessages();
+////                runOnUiThread(new Runnable() {
+////                    @Override
+////                    public void run() {
+////                        getMessages();
+////                      //      Toast.makeText(ChatDetailActivity.this, "timer called", Toast.LENGTH_SHORT).show();
+////
+////                    }
+////                });
+//
+//            }
+//        }, 0, 1000);
+
+
+
+        //  loadData();
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (x >= 0) {
+                    getMessages();
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+//                            if(!binding.etMessage.getText().toString().isEmpty()){
+//                                binding.etMessage.requestFocus();
+//                                // binding.etMessage.clearFocus();
+//                                //     Toast.makeText(ChatDetailActivity.this, "empty", Toast.LENGTH_SHORT).show();
+//                            }
+                         //   binding.etMessage.requestFocus();
+                            apiInterface.getStatus(receiverId).enqueue(new Callback<Users>() {
+                                @Override
+                                public void onResponse(Call<Users> call, Response<Users> response) {
+                                    if (response != null) {
+                                        if (response.body().getStatus().equals("1")) {
+                                            if (response.body().getUserStatus() != null) {
+                                                if (response.body().getUserStatus().equals("offline")) {
+                                                    binding.tvTyping.setVisibility(View.GONE);
+                                                } else {
+                                                    binding.tvTyping.setText(response.body().getUserStatus().toString());
+                                                    binding.tvTyping.setVisibility(View.VISIBLE);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                @Override
+                                public void onFailure(Call<Users> call, Throwable t) {
+
+                                }
+                            });
+
+                        }
+                    });
+
+                    try {
+                        sleep(3000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        thread.start();
+
 
 
         binding.leftArrow.setOnClickListener(new View.OnClickListener() {
@@ -201,43 +353,22 @@ public class ChatDetailActivity extends AppCompatActivity {
         senderRoom = senderId + receiverId;
         receiverRoom = receiverId + senderId;
 
-        apiInterface.getStatus(receiverId).enqueue(new Callback<Users>() {
-            @Override
-            public void onResponse(Call<Users> call, Response<Users> response) {
-                if (response != null) {
-                    if (response.body().getStatus().equals("1")) {
-                        if (!response.body().getUserStatus().isEmpty()) {
-                            if (response.body().getUserStatus().equals("offline")) {
-                                binding.tvTyping.setVisibility(View.GONE);
-                            } else {
-                                binding.tvTyping.setText(response.body().getUserStatus().toString());
-                                binding.tvTyping.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    }
-                }
-            }
-            @Override
-            public void onFailure(Call<Users> call, Throwable t) {
 
-            }
-        });
-
-
-        Handler handler = new Handler();
+        Handler handler1 = new Handler();
         binding.etMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                binding.etMessage.requestFocus();
             }
-
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                binding.etMessage.requestFocus();
                 if (TextUtils.isEmpty(binding.etMessage.getText().toString())) {
                     fab.setVisibility(View.INVISIBLE);
                     binding.recordButton.setVisibility(View.VISIBLE);
                     binding.camera.setVisibility(View.VISIBLE);
+
                 } else {
                     fab.setVisibility(View.VISIBLE);
                     binding.recordButton.setVisibility(View.INVISIBLE);
@@ -247,7 +378,7 @@ public class ChatDetailActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                binding.etMessage.requestFocus();
                 apiInterface.setStatus("typing...", senderId).enqueue(new Callback<UserResponse>() {
                     @Override
                     public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
@@ -264,7 +395,7 @@ public class ChatDetailActivity extends AppCompatActivity {
                     }
                 });
                 // handler.removeCallbacksAndMessages("null");
-                handler.postDelayed(userStoppedTyping, 1000);
+                handler1.postDelayed(userStoppedTyping, 1000);
             }
 
             Runnable userStoppedTyping = new Runnable() {
@@ -332,7 +463,7 @@ public class ChatDetailActivity extends AppCompatActivity {
 
         audioRecorder = new AudioRecorder();
 
-        RecordView recordView = (RecordView) findViewById(R.id.record_view);
+        recordView = (RecordView) findViewById(R.id.record_view);
         final RecordButton recordButton = (RecordButton) findViewById(R.id.record_button);
 
         //IMPORTANT
@@ -342,7 +473,11 @@ public class ChatDetailActivity extends AppCompatActivity {
         recordButton.setOnRecordClickListener(new OnRecordClickListener() {
             @Override
             public void onClick(View v) {
-                checkPermissionFromDevice();
+                if(!checkPermissionFromDevice()){
+                    startRecording();
+                }else{
+                    requestPermission();
+                }
                 Toast.makeText(ChatDetailActivity.this, "RECORD BUTTON CLICKED", Toast.LENGTH_SHORT).show();
                 Log.d("RecordButton", "RECORD BUTTON CLICKED");
             }
@@ -363,77 +498,6 @@ public class ChatDetailActivity extends AppCompatActivity {
 //
 //
 //        recordView.setCustomSounds(R.raw.record_start, R.raw.record_finished, 0);
-
-        if(!checkPermissionFromDevice()){
-            recordView.setOnRecordListener(new OnRecordListener() {
-                @Override
-                public void onStart() {
-                        binding.etMessage.setVisibility(View.INVISIBLE);
-                        binding.emoji.setVisibility(View.INVISIBLE);
-                        binding.camera.setVisibility(View.INVISIBLE);
-                        binding.attachment.setVisibility(View.INVISIBLE);
-
-                        recordFile = new File(getFilesDir(), UUID.randomUUID().toString() + ".opus");
-
-                        try {
-                            audioRecorder.start(recordFile.getPath());
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        Log.d("RecordView", "onStart");
-                        Toast.makeText(ChatDetailActivity.this, "OnStartRecord", Toast.LENGTH_SHORT).show();
-
-                        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                        if (vibrator != null) {
-                            vibrator.vibrate(100);
-                        }
-                    }
-                @Override
-                public void onCancel() {
-                    try {
-                        stopRecording(true);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(ChatDetailActivity.this, "onCancel", Toast.LENGTH_SHORT).show();
-
-                        Log.d("RecordView", "onCancel");
-                    }
-
-
-                }
-
-                @Override
-                public void onFinish(long recordTime) {
-                    binding.etMessage.setVisibility(View.VISIBLE);
-                    binding.emoji.setVisibility(View.VISIBLE);
-                    binding.camera.setVisibility(View.VISIBLE);
-                    binding.attachment.setVisibility(View.VISIBLE);
-                    stopRecording(false);
-
-
-                    String time = getHumanTimeText(recordTime);
-
-                    sendVoice();
-                }
-
-                @Override
-                public void onLessThanSecond() {
-                    binding.etMessage.setVisibility(View.VISIBLE);
-                    binding.emoji.setVisibility(View.VISIBLE);
-                    binding.camera.setVisibility(View.VISIBLE);
-                    binding.attachment.setVisibility(View.VISIBLE);
-                    stopRecording(true);
-
-                    Toast.makeText(ChatDetailActivity.this, "OnLessThanSecond", Toast.LENGTH_SHORT).show();
-                    Log.d("RecordView", "onLessThanSecond");
-                }
-            });
-        } else {
-            requestPermission();
-        }
-
-
 
         recordView.setOnBasketAnimationEndListener(new OnBasketAnimationEnd() {
             @Override
@@ -678,6 +742,72 @@ public class ChatDetailActivity extends AppCompatActivity {
 
 
     }
+    private void startRecording(){
+        recordView.setOnRecordListener(new OnRecordListener() {
+            @Override
+            public void onStart() {
+                binding.etMessage.setVisibility(View.INVISIBLE);
+                binding.emoji.setVisibility(View.INVISIBLE);
+                binding.camera.setVisibility(View.INVISIBLE);
+                binding.attachment.setVisibility(View.INVISIBLE);
+
+                recordFile = new File(getFilesDir(), UUID.randomUUID().toString() + ".opus");
+
+                try {
+                    audioRecorder.start(recordFile.getPath());
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Log.d("RecordView", "onStart");
+                Toast.makeText(ChatDetailActivity.this, "OnStartRecord", Toast.LENGTH_SHORT).show();
+
+                Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                if (vibrator != null) {
+                    vibrator.vibrate(100);
+                }
+            }
+            @Override
+            public void onCancel() {
+                try {
+                    stopRecording(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(ChatDetailActivity.this, "onCancel", Toast.LENGTH_SHORT).show();
+
+                    Log.d("RecordView", "onCancel");
+                }
+
+
+            }
+
+            @Override
+            public void onFinish(long recordTime) {
+                binding.etMessage.setVisibility(View.VISIBLE);
+                binding.emoji.setVisibility(View.VISIBLE);
+                binding.camera.setVisibility(View.VISIBLE);
+                binding.attachment.setVisibility(View.VISIBLE);
+                stopRecording(false);
+
+
+                String time = getHumanTimeText(recordTime);
+
+                sendVoice();
+            }
+
+            @Override
+            public void onLessThanSecond() {
+                binding.etMessage.setVisibility(View.VISIBLE);
+                binding.emoji.setVisibility(View.VISIBLE);
+                binding.camera.setVisibility(View.VISIBLE);
+                binding.attachment.setVisibility(View.VISIBLE);
+                stopRecording(true);
+
+                Toast.makeText(ChatDetailActivity.this, "OnLessThanSecond", Toast.LENGTH_SHORT).show();
+                Log.d("RecordView", "onLessThanSecond");
+            }
+        });
+    }
 
     private void uploadVideo(String message, String path) {
 
@@ -886,7 +1016,7 @@ public class ChatDetailActivity extends AppCompatActivity {
                         //  Intent intent = new Intent(Intent.ACTION_PICK ,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                         Intent intent = new Intent();
                         intent.setType("application/*");
-                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
                         startActivityForResult(Intent.createChooser(intent, "Choose a file "), SELECT_FILE);
 
                     }
@@ -1076,6 +1206,8 @@ public class ChatDetailActivity extends AppCompatActivity {
     }
 
     private void getMessages() {
+        //   x++;
+//        Toast.makeText(this, "message calles "+x, Toast.LENGTH_SHORT).show();
         apiInterface.getMessag().enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
@@ -1085,15 +1217,17 @@ public class ChatDetailActivity extends AppCompatActivity {
                             list.clear();
                             data.clear();
                             list = response.body().getMessagelist();
-                          Toast.makeText(ChatDetailActivity.this, "size b:" + list.size(), Toast.LENGTH_SHORT).show();
+                            //   Toast.makeText(ChatDetailActivity.this, "size b:" + list.size(), Toast.LENGTH_SHORT).show();
                             for (int i = 0; i < list.size(); i++) {
                                 MessageModel model = list.get(i);
                                 if (model.getSender_id().equals(senderId) && model.getReceiver_id().equals(receiverId)) {
                                     data.add(model);
+                                    //  chatAdapter.updateList(data);
                                     chatAdapter.notifyDataSetChanged();
 
                                 } else if (model.getReceiver_id().equals(senderId) && model.getSender_id().equals(receiverId)) {
                                     data.add(model);
+                                    //  chatAdapter.updateList(data);
                                     chatAdapter.notifyDataSetChanged();
                                 } else {
                                     //  list.remove(i);
@@ -1106,7 +1240,7 @@ public class ChatDetailActivity extends AppCompatActivity {
                             //  Toast.makeText(ChatDetailActivity.this, "size :" + data.size(), Toast.LENGTH_SHORT).show();
                         }
                         else {
-                            chatAdapter.notifyDataSetChanged();
+                            //   chatAdapter.notifyDataSetChanged();
                             Toast.makeText(ChatDetailActivity.this, "in chat else", Toast.LENGTH_SHORT).show();
                             //Toast.makeText(ChatDetailActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -1117,10 +1251,23 @@ public class ChatDetailActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
-               // data.addAll(data);
+                // data.addAll(data);
                 loadData();
-                Toast.makeText(ChatDetailActivity.this, "i m in chat size is :"+data.size(), Toast.LENGTH_SHORT).show();
+                //   Toast.makeText(ChatDetailActivity.this, "get messages failure called", Toast.LENGTH_SHORT).show();
                 chatAdapter.notifyDataSetChanged();
+                //  getMessages();
+                //   handler.postDelayed(runnable,1000);
+//                try {
+//                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+                // handler.post(runnable);
+
+
+//thread.suspend();
+                //              thread.stop();
+                //            thread.start();
             }
         });
     }
@@ -1130,41 +1277,44 @@ public class ChatDetailActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (binding.multipleItems.getVisibility() == View.VISIBLE) {
             binding.multipleItems.setVisibility(View.GONE);
-
-        } else {
-            finish();
+        } else if(binding.etMessage.getText().toString().isEmpty()) {
+          //  binding.etMessage.clearFocus();
+        }else{
+            startActivity(new Intent(this ,MainActivity.class));
+            finishAffinity();
             super.onBackPressed();
         }
     }
 
     private void saveData(){
-        Toast.makeText(this, "save data", Toast.LENGTH_SHORT).show();
+        //   Toast.makeText(this, "save data", Toast.LENGTH_SHORT).show();
         SharedPreferences sp = getSharedPreferences("aliApp" , Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         Gson gson = new Gson();
         String json = gson.toJson(data);
         editor.putString(receiverId , json);
         editor.apply();
+        editor.commit();
+        //    handler.postDelayed(runnable,1000);
     }
 
     private void loadData(){
 
-        Toast.makeText(this, "load data", Toast.LENGTH_SHORT).show();
+        //   Toast.makeText(this, "load data", Toast.LENGTH_SHORT).show();
         SharedPreferences sp = getSharedPreferences("aliApp" , Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sp.getString(receiverId , null);
         Type type = new TypeToken<ArrayList<MessageModel>>() {}.getType();
 
         data = gson.fromJson(json , type);
-     //   chatAdapter.notifyDataSetChanged();
+
+        //   chatAdapter.notifyDataSetChanged();
         //  binding.chatRecyclerView.hideShimmerAdapter();
 
-        if(data == null){
-            data = new ArrayList<>();
-        }
+//        if(data == null){
+//            data = new ArrayList<>();
+//        }
     }
-
-
 
 }
 

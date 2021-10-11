@@ -84,7 +84,7 @@ public class OTPActivity extends AppCompatActivity {
 
                     @Override
                     public void onVerificationFailed(@NonNull FirebaseException e) {
-                        Toast.makeText(OTPActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(OTPActivity.this,"otp :"+ e.getMessage(), Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -133,7 +133,7 @@ public class OTPActivity extends AppCompatActivity {
                         }
                         else
                         {
-                            Toast.makeText(OTPActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OTPActivity.this,"otp :"+ task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -151,12 +151,12 @@ public class OTPActivity extends AppCompatActivity {
                 try {
                     if (response != null) {
                         if(response.body().getStatus().equals("1")) {
-                            Toast.makeText(OTPActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OTPActivity.this,"otp :"+ response.body().getMessage(), Toast.LENGTH_SHORT).show();
 
                           saveData(cuid , phoneNumber);
                         }
                         else{
-                            Toast.makeText(OTPActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OTPActivity.this,"otp :"+ response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }catch(Exception e){
@@ -166,7 +166,7 @@ public class OTPActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
-                Toast.makeText(OTPActivity.this, "error :"+t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(OTPActivity.this, "error otp:"+t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                // progressDialog.dismiss();
                 Log.e("failure", t.getLocalizedMessage());
             }
@@ -180,7 +180,7 @@ public class OTPActivity extends AppCompatActivity {
         editor.putString("CUID" , id);
         editor.putString("CUP" , phn);
         editor.commit();
-        editor.apply();
+       //editor.apply();
 
 
         Intent intent = new Intent(OTPActivity.this, MainActivity.class);

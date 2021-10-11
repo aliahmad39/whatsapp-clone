@@ -59,8 +59,6 @@ public class MainActivity extends AppCompatActivity {
     ImageView search, option;
     FragmentAdapter pageAdapter;
 
-
-
     private static String CUID;
     private static String CUN = "";
     private static String CUP = "";
@@ -106,8 +104,10 @@ public class MainActivity extends AppCompatActivity {
 
         fab = findViewById(R.id.fab);
 
+        //CUID = getIntent().getStringExtra("currentUID");
 
-      checkexitenence();
+
+         checkexitenence();
 
 
         viewPager = findViewById(R.id.viewpager);
@@ -116,7 +116,9 @@ public class MainActivity extends AppCompatActivity {
         tabItem2 = findViewById(R.id.tab2);
         tabItem3 = findViewById(R.id.tab3);
 
-        pageAdapter = new FragmentAdapter(getSupportFragmentManager(), tablayout.getTabCount(), CUID);
+//        Toast.makeText(this, "main activity"+ CUID, Toast.LENGTH_SHORT).show();
+
+        pageAdapter = new FragmentAdapter(getSupportFragmentManager(), tablayout.getTabCount());
 
         viewPager.setAdapter(pageAdapter);
 
@@ -160,16 +162,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkexitenence(){
         SharedPreferences sp = getSharedPreferences("UserCredentials" , MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
+       SharedPreferences.Editor editor = sp.edit();
+      //  Toast.makeText(this, "check existence", Toast.LENGTH_SHORT).show();
 
         if(!sp.contains("CUP")){
+         //   Toast.makeText(this, "existence", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this , PhoneNumberActivity.class);
             startActivity(intent);
         }else{
-            CUID = sp.getString("CUID" , "0");
+       //     Toast.makeText(this, "not existence", Toast.LENGTH_SHORT).show();
+            CUID = sp.getString("CUID" ,"0");
             CUP = sp.getString("CUP" , "0");
-
-
+            Toast.makeText(this, "id :"+CUID, Toast.LENGTH_SHORT).show();
         }
     }
 

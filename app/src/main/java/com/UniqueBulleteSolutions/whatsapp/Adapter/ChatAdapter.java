@@ -92,11 +92,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
         apiInterface = retrofit.create(ApiInterface.class);
     }
 
-    public void updateList(ArrayList<MessageModel> messageModels) {
-        messageModels.clear();
-        this.messageModels = messageModels;
-        notifyDataSetChanged();
-    }
+
 
     public ChatAdapter(ArrayList<MessageModel> messageModels, Context context, String sid, String rid, RelativeLayout showimagelayout, ImageView showImage) {
         this.messageModels = messageModels;
@@ -178,7 +174,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
                 setLayoutVisibility(viewHolder.senderMsg, View.GONE, viewHolder.senderImage, View.VISIBLE, viewHolder.layoutVoice, View.GONE, viewHolder.layoutVideo, View.GONE, viewHolder.documents, View.GONE, viewHolder.layoutDocumentSize, View.GONE);
                 // setProgressVisibility(viewHolder.pb_image,View.VISIBLE,viewHolder.pb_video,View.GONE,viewHolder.pb_voice,View.GONE,viewHolder.pb_document,View.GONE);
 
-                String path = ApiClient.BASE_URL + "ApiAuthentication/images/" + messageModel.getFile_path();
+                String path = ApiClient.BASE_URL + "images/" + messageModel.getFile_path();
                 viewHolder.pb_image.setVisibility(View.VISIBLE);
                 downloadFile(path, viewHolder.senderImage, viewHolder.pb_image, null, null, null, null);
 
@@ -199,12 +195,12 @@ public class ChatAdapter extends RecyclerView.Adapter {
 //                        .into(viewHolder.senderImage);
             } else if (messageModel.getMessage().equals("audio")) {
                 setLayoutVisibility(viewHolder.senderMsg, View.GONE, viewHolder.senderImage, View.GONE, viewHolder.layoutVoice, View.VISIBLE, viewHolder.layoutVideo, View.GONE, viewHolder.documents, View.GONE, viewHolder.layoutDocumentSize, View.GONE);
-                String path = ApiClient.BASE_URL + "ApiAuthentication/audio/" + messageModel.getFile_path();
+                String path = ApiClient.BASE_URL + "audio/" + messageModel.getFile_path();
                 downloadFile(path, null, viewHolder.pb_voice, "audio", viewHolder.tv_duration, viewHolder.musicProgress, viewHolder.play);
 
             } else if (messageModel.getMessage().equals("video")) {
                 setLayoutVisibility(viewHolder.senderMsg, View.GONE, viewHolder.senderImage, View.GONE, viewHolder.layoutVoice, View.GONE, viewHolder.layoutVideo, View.VISIBLE, viewHolder.documents, View.GONE, viewHolder.layoutDocumentSize, View.GONE);
-                String path = ApiClient.BASE_URL + "ApiAuthentication/videos/" + messageModel.getFile_path();
+                String path = ApiClient.BASE_URL + "videos/" + messageModel.getFile_path();
                 downloadFile(path, null, viewHolder.pb_video, null, null, null, null);
                 viewHolder.playVideo.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -223,7 +219,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
                     viewHolder.documentImage.setImageResource(R.drawable.ic_file);
                 }
 
-                String path = ApiClient.BASE_URL + "ApiAuthentication/document/" + messageModel.getFile_path();
+                String path = ApiClient.BASE_URL + "document/" + messageModel.getFile_path();
 
                 viewHolder.title.setText(messageModel.getFileName());
                 viewHolder.size.setText(messageModel.getFileSize() + ".");
@@ -249,7 +245,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
             if (messageModel.getMessage().equals("photo")) {
                 setLayoutVisibility(viewHolder.receiverMsg, View.GONE, viewHolder.receiverImage, View.VISIBLE, viewHolder.layoutVoice, View.GONE, viewHolder.layoutVideo, View.GONE, viewHolder.documents, View.GONE, viewHolder.layoutDocumentSize, View.GONE);
 
-                String path = ApiClient.BASE_URL + "ApiAuthentication/images/" + messageModel.getFile_path();
+                String path = ApiClient.BASE_URL + "images/" + messageModel.getFile_path();
                 downloadFile(path, viewHolder.receiverImage, viewHolder.pb_image, null, null, null, null);
 
                 viewHolder.receiverImage.setOnClickListener(new View.OnClickListener() {
@@ -268,11 +264,12 @@ public class ChatAdapter extends RecyclerView.Adapter {
 //                        .into(viewHolder.receiverImage);
             } else if (messageModel.getMessage().equals("audio")) {
                 setLayoutVisibility(viewHolder.receiverMsg, View.GONE, viewHolder.receiverImage, View.GONE, viewHolder.layoutVoice, View.VISIBLE, viewHolder.layoutVideo, View.GONE, viewHolder.documents, View.GONE, viewHolder.layoutDocumentSize, View.GONE);
-                String path = ApiClient.BASE_URL + "ApiAuthentication/audio/" + messageModel.getFile_path();
+                String path = ApiClient.BASE_URL + "audio/" + messageModel.getFile_path();
                 downloadFile(path, null, viewHolder.pb_voice, "audio", viewHolder.tv_duration, viewHolder.musicProgress, viewHolder.play);
             } else if (messageModel.getMessage().equals("video")) {
                 setLayoutVisibility(viewHolder.receiverMsg, View.GONE, viewHolder.receiverImage, View.GONE, viewHolder.layoutVoice, View.GONE, viewHolder.layoutVideo, View.VISIBLE, viewHolder.documents, View.GONE, viewHolder.layoutDocumentSize, View.GONE);
-                String path = ApiClient.BASE_URL + "ApiAuthentication/videos/" + messageModel.getFile_path();
+                //String path = ApiClient.BASE_URL + "ApiAuthentication/videos/" + messageModel.getFile_path();
+                String path = ApiClient.BASE_URL + "videos/" + messageModel.getFile_path();
                 downloadFile(path, null, viewHolder.pb_video, null, null, null, null);
                 viewHolder.playVideo.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -290,7 +287,8 @@ public class ChatAdapter extends RecyclerView.Adapter {
                     viewHolder.documentImage.setImageResource(R.drawable.ic_file);
                 }
 
-                String path = ApiClient.BASE_URL + "ApiAuthentication/document/" + messageModel.getFile_path();
+              //  String path = ApiClient.BASE_URL + "ApiAuthentication/document/" + messageModel.getFile_path();
+                String path = ApiClient.BASE_URL + "document/" + messageModel.getFile_path();
 
                 viewHolder.title.setText(messageModel.getFileName());
                 viewHolder.size.setText(messageModel.getFileSize() + ".");
@@ -315,6 +313,12 @@ public class ChatAdapter extends RecyclerView.Adapter {
     private void setProgressVisibility(ProgressBar pb_image, int visible, ProgressBar pb_video, int gone, ProgressBar pb_voice, int gone1, ProgressBar pb_document, int gone2) {
 
 
+    }
+
+    public void updateList(ArrayList<MessageModel> list) {
+        messageModels.clear();
+       messageModels = list;
+        notifyDataSetChanged();
     }
 
 
