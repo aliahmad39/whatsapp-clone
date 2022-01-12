@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Handler;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,7 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.UniqueBulleteSolutions.whatsapp.Adapter.ChatAdapter;
+
 import com.UniqueBulleteSolutions.whatsapp.Adapter.UserAdapter;
 import com.UniqueBulleteSolutions.whatsapp.Api.ApiClient;
 import com.UniqueBulleteSolutions.whatsapp.Api.ApiInterface;
@@ -82,11 +83,11 @@ public class ChatFragment extends Fragment {
 
     FragmentChatBinding binding;
     List<Users> list = new ArrayList<>();
-   // List<MessageModel> messageList = new ArrayList<>();
+    // List<MessageModel> messageList = new ArrayList<>();
     List<MessageModel> messageList = new ArrayList<>();
     List<String> listid = new ArrayList<>();
     List<Users> groupList = new ArrayList<>();
-    private  ArrayList<Users> data = new ArrayList<>();
+    ArrayList<Users> data = new ArrayList<>();
     private static ArrayList<Users> data2 = new ArrayList<>();
     private static ArrayList<Users> data1 = new ArrayList<>();
     FirebaseDatabase database;
@@ -96,16 +97,14 @@ public class ChatFragment extends Fragment {
     UserAdapter adapter;
     boolean isGroupCall = false;
     private int pos = 0;
-    private  ArrayList<Users> phoneList;
-    private  ArrayList<String> ids = new ArrayList<>();
-    private  ArrayList<setClass>  setclass = new ArrayList<setClass>();
+    private ArrayList<Users> phoneList;
+    private ArrayList<String> ids = new ArrayList<>();
+    private ArrayList<setClass> setclass = new ArrayList<setClass>();
     HashSet<String> set = new HashSet<>();
     int x = 2;
 
     ArrayList<String> number = new ArrayList<>();
     private static ArrayList<Users> contacts = new ArrayList<>();
-
-
 
 
     public static ArrayList<Users> getData() {
@@ -118,69 +117,86 @@ public class ChatFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentChatBinding.inflate(inflater, container, false);
 
-          changeFabicon();
+        changeFabicon();
 
-          Permissions permissions = new Permissions();
-          if(permissions.ContactPermissions(getContext())){
-              getContact();
-              CUID = MainActivity.getCUID();
-              MainActivity.pos = 0;
+        Permissions permissions = new Permissions();
+        if (permissions.ContactPermissions(getContext())) {
+            getContact();
+            CUID = MainActivity.getCUID();
+            MainActivity.pos = 0;
 
-              Retrofit retrofit = ApiClient.getClient();
-              apiInterface = retrofit.create(ApiInterface.class);
+            Retrofit retrofit = ApiClient.getClient();
+            apiInterface = retrofit.create(ApiInterface.class);
 
-              loadData();
+            loadData();
 
-              adapter = new UserAdapter(data, getContext(), CUID);
-              LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-              binding.chatRecyclerView.setLayoutManager(layoutManager);
-              binding.chatRecyclerView.setAdapter(adapter);
+            adapter = new UserAdapter(data, getContext(), CUID);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+            binding.chatRecyclerView.setLayoutManager(layoutManager);
+            binding.chatRecyclerView.setAdapter(adapter);
 
-              getServerUsersMessages();
+            getServerUsersMessages();
 
-              Thread thread = new Thread(new Runnable() {
-                  @Override
-                  public void run() {
-                      while (x >= 0) {
-                          getServerUsersMessages();
-//                          handler.post(new Runnable() {
-//                              @Override
-//                              public void run() {
-//                                  if(!binding.etMessage.getText().toString().isEmpty())
-//                                      binding.etMessage.requestFocus();
-//                                  apiInterface.getStatus(receiverId).enqueue(new Callback<Users>() {
-//                                      @Override
-//                                      public void onResponse(Call<Users> call, Response<Users> response) {
-//                                          if (response != null) {
-//                                              if (response.body().getStatus().equals("1")) {
-//                                                  if (response.body().getUserStatus() != null) {
-//                                                      if (response.body().getUserStatus().equals("offline")) {
-//                                                          binding.tvTyping.setVisibility(View.GONE);
-//                                                      } else {
-//                                                          binding.tvTyping.setText(response.body().getUserStatus().toString());
-//                                                          binding.tvTyping.setVisibility(View.VISIBLE);
-//                                                      }
-//                                                  }
-//                                              }
-//                                          }
-//                                      }
-//                                      @Override
-//                                      public void onFailure(Call<Users> call, Throwable t) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    //   getMessages();
+                    while (x >= 0){
+                        try {
+                            sleep(30000);
+                            getServerUsersMessages();
+                            Log.d("timer","timer call");
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+            }).start();
+
+//              Thread thread = new Thread(new Runnable() {
+//                  @Override
+//                  public void run() {
+//                      while (x >= 0) {
+//                          getServerUsersMessages();
+////                          handler.post(new Runnable() {
+////                              @Override
+////                              public void run() {
+////                                  if(!binding.etMessage.getText().toString().isEmpty())
+////                                      binding.etMessage.requestFocus();
+////                                  apiInterface.getStatus(receiverId).enqueue(new Callback<Users>() {
+////                                      @Override
+////                                      public void onResponse(Call<Users> call, Response<Users> response) {
+////                                          if (response != null) {
+////                                              if (response.body().getStatus().equals("1")) {
+////                                                  if (response.body().getUserStatus() != null) {
+////                                                      if (response.body().getUserStatus().equals("offline")) {
+////                                                          binding.tvTyping.setVisibility(View.GONE);
+////                                                      } else {
+////                                                          binding.tvTyping.setText(response.body().getUserStatus().toString());
+////                                                          binding.tvTyping.setVisibility(View.VISIBLE);
+////                                                      }
+////                                                  }
+////                                              }
+////                                          }
+////                                      }
+////                                      @Override
+////                                      public void onFailure(Call<Users> call, Throwable t) {
+////
+////                                      }
+////                                  });
+////                              }
+////                          });
 //
-//                                      }
-//                                  });
-//                              }
-//                          });
-
-                          try {
-                              sleep(2000);
-                          } catch (Exception e) {
-                              e.printStackTrace();
-                          }
-                      }
-                  }
-              });
-              thread.start();
+//                          try {
+//                              sleep(2000);
+//                          } catch (Exception e) {
+//                              e.printStackTrace();
+//                          }
+//                      }
+//                  }
+//              });
+//              thread.start();
 
 //              new Timer().scheduleAtFixedRate(new TimerTask() {
 //                  @Override
@@ -199,7 +215,7 @@ public class ChatFragment extends Fragment {
 //              }, 0, 100);
 
             //  loadData();
-          }
+        }
 
 
         return binding.getRoot();
@@ -208,6 +224,7 @@ public class ChatFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if(!CUID.isEmpty()){
         apiInterface.setStatus("online", CUID).enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
@@ -225,26 +242,28 @@ public class ChatFragment extends Fragment {
         });
     }
 
+}
+
 
     @Override
     public void onPause() {
+        if(!CUID.isEmpty()) {
+            apiInterface.setStatus("offline", CUID).enqueue(new Callback<UserResponse>() {
+                @Override
+                public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                    if (response != null) {
+                        if (response.body().getStatus().equals("1")) {
 
-        apiInterface.setStatus("offline", CUID).enqueue(new Callback<UserResponse>() {
-            @Override
-            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-                if (response != null) {
-                    if (response.body().getStatus().equals("1")) {
-
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<UserResponse> call, Throwable t) {
-                Toast.makeText(getContext(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
+                @Override
+                public void onFailure(Call<UserResponse> call, Throwable t) {
+                    Toast.makeText(getContext(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
         super.onPause();
     }
 
@@ -385,10 +404,21 @@ public class ChatFragment extends Fragment {
     private void loadData(){
         SharedPreferences sp = getContext().getSharedPreferences("aliApp" , Context.MODE_PRIVATE);
         Gson gson = new Gson();
-        String json = sp.getString("userList" , null);
-        Type type = new TypeToken<ArrayList<Users>>() {}.getType();
 
-        data = gson.fromJson(json , type);
+        if(sp.contains("userList")) {
+            String json = sp.getString("userList", null);
+            Type type = new TypeToken<ArrayList<Users>>() {
+            }.getType();
+
+            ArrayList<Users> dataList = gson.fromJson(json, type);
+
+            if (dataList.size() > 0){
+                data.clear();
+                data.addAll(dataList);
+            }
+
+
+        }
 
 //        if(data == null){
 //            data = new ArrayList<>();

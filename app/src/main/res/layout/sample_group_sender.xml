@@ -7,7 +7,7 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_image"
+        android:id="@+id/gs_layout_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -20,7 +20,7 @@
         android:minHeight="30dp">
 
         <TextView
-            android:id="@+id/tv_uname"
+            android:id="@+id/gs_tv_uname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -31,7 +31,7 @@
             />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_video_sender"
+            android:id="@+id/gs_layout_video_sender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -44,10 +44,10 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_uname">
+            app:layout_constraintTop_toBottomOf="@+id/gs_tv_uname">
 
             <VideoView
-                android:id="@+id/videoView"
+                android:id="@+id/gs_videoView"
                 android:layout_width="150dp"
                 android:layout_height="200dp"
                 android:layout_marginRight="7dp"
@@ -58,7 +58,7 @@
 
 
             <ImageView
-                android:id="@+id/video_play"
+                android:id="@+id/gs_video_play"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:scaleType="fitXY"
@@ -74,7 +74,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
-            android:id="@+id/attachImageSender"
+            android:id="@+id/gs_attachImageSender"
             android:layout_width="200dp"
             android:layout_height="130dp"
             android:layout_marginStart="5dp"
@@ -88,12 +88,12 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_uname"
+            app:layout_constraintTop_toBottomOf="@+id/gs_tv_uname"
             app:srcCompat="@drawable/avatar" />
 
 
         <TextView
-            android:id="@+id/tvSender"
+            android:id="@+id/gs_tvSender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -107,10 +107,10 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_uname" />
+            app:layout_constraintTop_toBottomOf="@+id/gs_tv_uname" />
 
         <LinearLayout
-            android:id="@+id/layout_voice_sender"
+            android:id="@+id/gs_layout_voice_sender"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
@@ -121,7 +121,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_uname">
+            app:layout_constraintTop_toBottomOf="@+id/gs_tv_uname">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -130,7 +130,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/btn_play_audio_sender"
+                    android:id="@+id/gs_btn_play_audio_sender"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_centerVertical="true"
@@ -140,7 +140,7 @@
                     app:tint="@color/black" />
 
                 <SeekBar
-                    android:id="@+id/sbProgress"
+                    android:id="@+id/gs_sbProgress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical" />
@@ -149,7 +149,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tv_time"
+                android:id="@+id/gs_tv_time"
                 android:layout_width="36dp"
                 android:layout_height="16dp"
                 android:layout_marginLeft="35dp"
@@ -159,7 +159,7 @@
         </LinearLayout>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/layout_document_sender"
+            android:id="@+id/gs_layout_document_sender"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -172,7 +172,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_uname">
+            app:layout_constraintTop_toBottomOf="@+id/gs_tv_uname">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -185,14 +185,14 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/document_image"
+                        android:id="@+id/gs_document_image"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_file" />
 
                     <TextView
-                        android:id="@+id/tvDocument"
+                        android:id="@+id/gs_tvDocument"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -201,7 +201,7 @@
                         android:text="hello" />
 
                     <ImageView
-                        android:id="@+id/downloadDocument"
+                        android:id="@+id/gs_downloadDocument"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:scaleType="fitXY"
@@ -215,18 +215,17 @@
         </androidx.cardview.widget.CardView>
 
         <LinearLayout
-            android:id="@+id/layout_document_size"
+            android:id="@+id/gs_layout_document_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:orientation="horizontal"
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tvSenderTime"
+            app:layout_constraintEnd_toStartOf="@+id/gs_tvSenderTime"
             app:layout_constraintStart_toStartOf="parent">
 
             <TextView
-                android:id="@+id/tvSize"
+                android:id="@+id/gs_tvSize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -244,7 +243,7 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/tvExt"
+                android:id="@+id/gs_tvExt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="12:00pm"
@@ -254,12 +253,12 @@
 
 
         <TextView
-            android:id="@+id/tvSenderTime"
+            android:id="@+id/gs_tvSenderTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/layout_image"
             android:layout_marginEnd="12dp"
-            android:layout_toEndOf="@id/layout_image"
+            android:layout_toEndOf="@id/gs_layout_image"
             android:text="12:00pm"
             android:textColor="@color/black"
             android:textSize="10sp"

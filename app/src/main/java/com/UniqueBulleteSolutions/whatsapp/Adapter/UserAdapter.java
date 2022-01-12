@@ -34,22 +34,17 @@ import java.util.Objects;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> implements Filterable {
     //List<Users> list;
-    ArrayList<Users> list = new ArrayList<>();
+    ArrayList<Users> list ;
     ArrayList<Users> backup;
     Context context;
     String CUID;
     private Dialog dialog;
 
-
-
-
-
     public UserAdapter(ArrayList<Users> list, Context context , String id) {
-        this.list = list;
+       this.list = new ArrayList<>(list);
         this.context = context;
         CUID = id;
         this.backup = list;
-
     }
 
     public UserAdapter(ArrayList<Users> list, Context context) {
@@ -86,7 +81,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> im
 
         if(users.getIndex().equals("user")) {
 
-            String path = ApiClient.BASE_URL + "ApiAuthentication/profileImages/" + users.getUserPic();
+          //  String path = ApiClient.BASE_URL + "ApiAuthentication/profileImages/" + users.getUserPic();
+            String path = ApiClient.BASE_URL + "profileImages/" + users.getUserPic();
 
             Picasso.get().load(path).placeholder(R.drawable.avatar).into(holder.image);
 

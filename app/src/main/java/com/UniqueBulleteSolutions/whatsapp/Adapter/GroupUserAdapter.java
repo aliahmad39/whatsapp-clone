@@ -52,9 +52,8 @@ public class GroupUserAdapter extends  RecyclerView.Adapter<GroupUserAdapter.Vie
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Users users = list.get(position);
-        String path= ApiClient.BASE_URL+"ApiAuthentication/profileImages/"+users.getUserPic();
-
-
+       // String path= ApiClient.BASE_URL+"ApiAuthentication/profileImages/"+users.getUserPic();
+        String path= ApiClient.BASE_URL+"profileImages/"+users.getUserPic();
 
 
         Picasso.get().load(path).placeholder(R.drawable.avatar).into(holder.image);

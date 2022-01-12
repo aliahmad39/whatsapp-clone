@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView search, option;
     FragmentAdapter pageAdapter;
 
-    private static String CUID;
+    private static String CUID ="";
     private static String CUN = "";
     private static String CUP = "";
     private static String CUI = "";
@@ -166,14 +166,16 @@ public class MainActivity extends AppCompatActivity {
       //  Toast.makeText(this, "check existence", Toast.LENGTH_SHORT).show();
 
         if(!sp.contains("CUP")){
-         //   Toast.makeText(this, "existence", Toast.LENGTH_SHORT).show();
+       //   Toast.makeText(this, "not existence", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this , PhoneNumberActivity.class);
             startActivity(intent);
+            finishAffinity();
         }else{
-       //     Toast.makeText(this, "not existence", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "existence", Toast.LENGTH_SHORT).show();
             CUID = sp.getString("CUID" ,"0");
             CUP = sp.getString("CUP" , "0");
-            Toast.makeText(this, "id :"+CUID, Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(this, "MainId :"+CUID, Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(this, "MainPhn :"+CUP, Toast.LENGTH_SHORT).show();
         }
     }
 

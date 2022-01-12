@@ -56,8 +56,11 @@ public class TopStatusAdapter extends RecyclerView.Adapter<TopStatusAdapter.TopS
 
         Status lastStatus = usersStatus.getStatuses().get(usersStatus.getStatuses().size()-1);
 
-        String path= ApiClient.BASE_URL+"ApiAuthentication/statuses/"+lastStatus.getStatus_path();
-        String path2=ApiClient.BASE_URL+"ApiAuthentication/profileImages/"+usersStatus.getProfileImage();
+        //String path= ApiClient.BASE_URL+"ApiAuthentication/statuses/"+lastStatus.getStatus_path();
+        //String path2=ApiClient.BASE_URL+"ApiAuthentication/profileImages/"+usersStatus.getProfileImage();
+
+        String path= ApiClient.BASE_URL+"statuses/"+lastStatus.getStatus_path();
+        String path2=ApiClient.BASE_URL+"profileImages/"+usersStatus.getProfileImage();
 
         Glide.with(context).load(path).into(holder.binding.circleImage);
         holder.binding.userNameStatus.setText(usersStatus.getName());
@@ -83,7 +86,8 @@ public class TopStatusAdapter extends RecyclerView.Adapter<TopStatusAdapter.TopS
             public void onClick(View v) {
                 ArrayList<MyStory> myStories = new ArrayList<>();
                 for(Status status: usersStatus.getStatuses()){
-                    myStories.add(new MyStory(ApiClient.BASE_URL+"ApiAuthentication/statuses/"+status.getStatus_path()));
+                  //  myStories.add(new MyStory(ApiClient.BASE_URL+"ApiAuthentication/statuses/"+status.getStatus_path()));
+                    myStories.add(new MyStory(ApiClient.BASE_URL+"statuses/"+status.getStatus_path()));
                 }
 
                 new StoryView.Builder(((FragmentActivity)context).getSupportFragmentManager())

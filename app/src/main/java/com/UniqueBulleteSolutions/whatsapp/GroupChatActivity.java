@@ -85,6 +85,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static java.lang.Thread.sleep;
 
 public class GroupChatActivity extends AppCompatActivity {
     ActivityGroupChatBinding binding;
@@ -128,6 +129,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
     private AudioRecorder audioRecorder;
     private File recordFile;
+    int x =0;
 
 
     @Override
@@ -145,36 +147,56 @@ public class GroupChatActivity extends AppCompatActivity {
 
 
         String path = ApiClient.BASE_URL + "ApiAuthentication/groupImages/" + groupIcon;
-        Picasso.get().load(path).placeholder(R.drawable.avatar).into(binding.profileImage);
+        Picasso.get().load(path).placeholder(R.drawable.avatar).into(binding.gcProfileImage);
 
         Retrofit retrofit = ApiClient.getClient();
         apiInterface = retrofit.create(ApiInterface.class);
 
         getMessages();
-        binding.userName.setText(userName);
+        binding.gcUserName.setText(userName);
 
-        fab = binding.fabSend;
+        fab = binding.gcFabSend;
 
        loadData();
 
-        chatAdapter = new GroupMessagesAdapter(data, this, senderId, binding.imagelayout, binding.userChatImage);
+        chatAdapter = new GroupMessagesAdapter(data, this, senderId, binding.gcImagelayout, binding.gcUserChatImage);
 
         //  binding.chatdetailRecyclerView.setAdapter(chatAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        binding.chatdetailRecyclerView.setLayoutManager(layoutManager);
-        binding.chatdetailRecyclerView.setAdapter(chatAdapter);
+        binding.gcChatdetailRecyclerView.setLayoutManager(layoutManager);
+        binding.gcChatdetailRecyclerView.setAdapter(chatAdapter);
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //   getMessages();
+                while (x >= 0){
+                    try {
+                        sleep(30000);
+                        getMessages();
+                        Log.d("timer","timer call");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }).start();
+
+
 
     //    getDeleteLog();
 
-        binding.leftArrow.setOnClickListener(new View.OnClickListener() {
+        binding.gcLeftArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
 
-        binding.userName.setOnClickListener(new View.OnClickListener() {
+        binding.gcUserName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(GroupChatActivity.this , GroupInfoActivity.class);
@@ -185,7 +207,7 @@ public class GroupChatActivity extends AppCompatActivity {
             }
         });
 
-        binding.etMessage.addTextChangedListener(new TextWatcher() {
+        binding.gcEtMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -194,14 +216,14 @@ public class GroupChatActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (TextUtils.isEmpty(binding.etMessage.getText().toString())) {
+                if (TextUtils.isEmpty(binding.gcEtMessage.getText().toString())) {
                     fab.setVisibility(View.INVISIBLE);
-                    binding.recordButton.setVisibility(View.VISIBLE);
-                    binding.camera.setVisibility(View.VISIBLE);
+                    binding.gcRecordButton.setVisibility(View.VISIBLE);
+                    binding.gcCamera.setVisibility(View.VISIBLE);
                 } else {
                     fab.setVisibility(View.VISIBLE);
-                    binding.recordButton.setVisibility(View.INVISIBLE);
-                    binding.camera.setVisibility(View.GONE);
+                    binding.gcRecordButton.setVisibility(View.INVISIBLE);
+                    binding.gcCamera.setVisibility(View.GONE);
                 }
             }
 
@@ -212,14 +234,14 @@ public class GroupChatActivity extends AppCompatActivity {
         });
 
 
-        binding.attachment.setOnClickListener(new View.OnClickListener() {
+        binding.gcAttachment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (binding.multipleItems.getVisibility() == View.GONE) {
-                    binding.multipleItems.setVisibility(View.VISIBLE);
+                if (binding.gcMultipleItems.getVisibility() == View.GONE) {
+                    binding.gcMultipleItems.setVisibility(View.VISIBLE);
                 } else {
 
-                    binding.multipleItems.setVisibility(View.GONE);
+                    binding.gcMultipleItems.setVisibility(View.GONE);
                 }
             }
         });
@@ -228,13 +250,13 @@ public class GroupChatActivity extends AppCompatActivity {
        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(binding.etMessage.getText().toString())) {
-                    String message = binding.etMessage.getText().toString();
+                if (!TextUtils.isEmpty(binding.gcEtMessage.getText().toString())) {
+                    String message = binding.gcEtMessage.getText().toString();
                     sendMessage(message);
 
-                    binding.etMessage.setText("");
+                    binding.gcEtMessage.setText("");
                     Toast.makeText(GroupChatActivity.this, "send click", Toast.LENGTH_SHORT).show();
-                    binding.camera.setVisibility(View.VISIBLE);
+                    binding.gcCamera.setVisibility(View.VISIBLE);
                 } else {
                     Toast.makeText(GroupChatActivity.this, "send recording", Toast.LENGTH_SHORT).show();
                 }
@@ -243,7 +265,7 @@ public class GroupChatActivity extends AppCompatActivity {
         });
 
 
-        binding.camera.setOnClickListener(new View.OnClickListener() {
+        binding.gcCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(GroupChatActivity.this, "camera clicked", Toast.LENGTH_SHORT).show();
@@ -254,8 +276,8 @@ public class GroupChatActivity extends AppCompatActivity {
 
         audioRecorder = new AudioRecorder();
 
-        RecordView recordView = (RecordView) findViewById(R.id.record_view);
-        final RecordButton recordButton = (RecordButton) findViewById(R.id.record_button);
+        RecordView recordView = (RecordView) findViewById(R.id.gc_record_view);
+        final RecordButton recordButton = (RecordButton) findViewById(R.id.gc_record_button);
 
         //IMPORTANT
         recordButton.setRecordView(recordView);
@@ -290,10 +312,10 @@ public class GroupChatActivity extends AppCompatActivity {
             @Override
             public void onStart() {
                 if (!checkPermissionFromDevice()) {
-                    binding.etMessage.setVisibility(View.INVISIBLE);
-                    binding.emoji.setVisibility(View.INVISIBLE);
-                    binding.camera.setVisibility(View.INVISIBLE);
-                    binding.attachment.setVisibility(View.INVISIBLE);
+                    binding.gcEtMessage.setVisibility(View.INVISIBLE);
+                    binding.gcEmoji.setVisibility(View.INVISIBLE);
+                    binding.gcCamera.setVisibility(View.INVISIBLE);
+                    binding.gcAttachment.setVisibility(View.INVISIBLE);
 
                     recordFile = new File(getFilesDir(), UUID.randomUUID().toString() + ".mp4");
 
@@ -330,10 +352,10 @@ public class GroupChatActivity extends AppCompatActivity {
 
             @Override
             public void onFinish(long recordTime) {
-                binding.etMessage.setVisibility(View.VISIBLE);
-                binding.emoji.setVisibility(View.VISIBLE);
-                binding.camera.setVisibility(View.VISIBLE);
-                binding.attachment.setVisibility(View.VISIBLE);
+                binding.gcEtMessage.setVisibility(View.VISIBLE);
+                binding.gcEmoji.setVisibility(View.VISIBLE);
+                binding.gcCamera.setVisibility(View.VISIBLE);
+                binding.gcAttachment.setVisibility(View.VISIBLE);
                 stopRecording(false);
 
 
@@ -344,10 +366,10 @@ public class GroupChatActivity extends AppCompatActivity {
 
             @Override
             public void onLessThanSecond() {
-                binding.etMessage.setVisibility(View.VISIBLE);
-                binding.emoji.setVisibility(View.VISIBLE);
-                binding.camera.setVisibility(View.VISIBLE);
-                binding.attachment.setVisibility(View.VISIBLE);
+                binding.gcEtMessage.setVisibility(View.VISIBLE);
+                binding.gcEmoji.setVisibility(View.VISIBLE);
+                binding.gcCamera.setVisibility(View.VISIBLE);
+                binding.gcAttachment.setVisibility(View.VISIBLE);
                 stopRecording(true);
 
                 Toast.makeText(GroupChatActivity.this, "OnLessThanSecond", Toast.LENGTH_SHORT).show();
@@ -359,10 +381,10 @@ public class GroupChatActivity extends AppCompatActivity {
         recordView.setOnBasketAnimationEndListener(new OnBasketAnimationEnd() {
             @Override
             public void onAnimationEnd() {
-                binding.etMessage.setVisibility(View.VISIBLE);
-                binding.emoji.setVisibility(View.VISIBLE);
-                binding.camera.setVisibility(View.VISIBLE);
-                binding.attachment.setVisibility(View.VISIBLE);
+                binding.gcEtMessage.setVisibility(View.VISIBLE);
+                binding.gcEmoji.setVisibility(View.VISIBLE);
+                binding.gcCamera.setVisibility(View.VISIBLE);
+                binding.gcAttachment.setVisibility(View.VISIBLE);
                 Log.d("RecordView", "Basket Animation Finished");
             }
         });
@@ -529,8 +551,8 @@ public class GroupChatActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (binding.multipleItems.getVisibility() == View.VISIBLE) {
-            binding.multipleItems.setVisibility(View.GONE);
+        if (binding.gcMultipleItems.getVisibility() == View.VISIBLE) {
+            binding.gcMultipleItems.setVisibility(View.GONE);
 
         } else {
             super.onBackPressed();
@@ -742,30 +764,30 @@ public class GroupChatActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.layoutcamera:
                 openCamera();
-                binding.multipleItems.setVisibility(View.GONE);
+                binding.gcMultipleItems.setVisibility(View.GONE);
                 Toast.makeText(this, "camera", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.layoutaudio:
                 openAudio();
-                binding.multipleItems.setVisibility(View.GONE);
+                binding.gcMultipleItems.setVisibility(View.GONE);
                 Toast.makeText(this, "audio", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.layoutcontact:
-                binding.multipleItems.setVisibility(View.GONE);
+                binding.gcMultipleItems.setVisibility(View.GONE);
                 Toast.makeText(this, "contact", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.layoutDocument:
                 openDocument();
-                binding.multipleItems.setVisibility(View.GONE);
+                binding.gcMultipleItems.setVisibility(View.GONE);
                 Toast.makeText(this, "document", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.layoutgallery:
                 openGallery();
-                binding.multipleItems.setVisibility(View.GONE);
+                binding.gcMultipleItems.setVisibility(View.GONE);
                 Toast.makeText(this, "gallery", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.layoutlocation:
-                binding.multipleItems.setVisibility(View.GONE);
+                binding.gcMultipleItems.setVisibility(View.GONE);
                 Toast.makeText(this, "location", Toast.LENGTH_SHORT).show();
                 break;
         }

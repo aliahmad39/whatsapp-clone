@@ -64,7 +64,7 @@ import static com.UniqueBulleteSolutions.whatsapp.utils.ChatServices.*;
 
 public class ChatAdapter extends RecyclerView.Adapter {
     //List<MessageModel> messageModels;
-    ArrayList<MessageModel> messageModels;
+    ArrayList<MessageModel> messageModels = new ArrayList<>();
     Context context;
     String rid, sid;
     int SENDER_VIEW_TYPE = 1 , RECEIVER_VIEW_TYPE = 2;
@@ -78,7 +78,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
     String downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
 
     public ChatAdapter(ArrayList<MessageModel> messageModels, Context context) {
-        this.messageModels = messageModels;
+        this.messageModels.addAll(messageModels);
         this.context = context;
         Retrofit retrofit = ApiClient.getClient();
         apiInterface = retrofit.create(ApiInterface.class);
@@ -193,7 +193,8 @@ public class ChatAdapter extends RecyclerView.Adapter {
 //                Glide.with(context).load(path)
 //                        .placeholder(R.drawable.avatar)
 //                        .into(viewHolder.senderImage);
-            } else if (messageModel.getMessage().equals("audio")) {
+            }
+            else if (messageModel.getMessage().equals("audio")) {
                 setLayoutVisibility(viewHolder.senderMsg, View.GONE, viewHolder.senderImage, View.GONE, viewHolder.layoutVoice, View.VISIBLE, viewHolder.layoutVideo, View.GONE, viewHolder.documents, View.GONE, viewHolder.layoutDocumentSize, View.GONE);
                 String path = ApiClient.BASE_URL + "audio/" + messageModel.getFile_path();
                 downloadFile(path, null, viewHolder.pb_voice, "audio", viewHolder.tv_duration, viewHolder.musicProgress, viewHolder.play);
@@ -239,7 +240,8 @@ public class ChatAdapter extends RecyclerView.Adapter {
             }
 
             viewHolder.senderTime.setText(messageModel.getMessage_time());
-        } else {
+        }
+        else {
             ReceiverViewHolder viewHolder = (ReceiverViewHolder) holder;
 
             if (messageModel.getMessage().equals("photo")) {
@@ -378,7 +380,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
             protected void onPostExecute(Boolean aBoolean) {
                 super.onPostExecute(aBoolean);
                 if (aBoolean) {
-                    Toast.makeText(context, "Download Sucessfully!", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(context, "Download Sucessfully!", Toast.LENGTH_SHORT).show();
                     String exten = filename.substring(filename.lastIndexOf('.'));
                     //   Toast.makeText(context, exten, Toast.LENGTH_LONG).show();
 

@@ -11,7 +11,7 @@
 
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/gc_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
@@ -24,7 +24,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/leftArrow"
+                android:id="@+id/gc_leftArrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -34,7 +34,7 @@
                 app:tint="@color/white" />
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profileImage"
+                android:id="@+id/gc_profileImage"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginStart="5dp"
@@ -44,7 +44,7 @@
                 app:civ_border_color="@color/black"
                 app:civ_border_width="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/leftArrow"
+                app:layout_constraintStart_toEndOf="@+id/gc_leftArrow"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
 
@@ -54,13 +54,13 @@
                 android:gravity="center_vertical"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/profileImage"
+                app:layout_constraintStart_toEndOf="@+id/gc_profileImage"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 >
 
                 <TextView
-                    android:id="@+id/userName"
+                    android:id="@+id/gc_userName"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="Ali Ahmad"
@@ -78,22 +78,22 @@
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chatdetailRecyclerView"
+        android:id="@+id/gc_chatdetailRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/linearlayout1"
-        android:layout_below="@+id/toolbar" />
+        android:layout_above="@+id/gc_linearlayout1"
+        android:layout_below="@+id/gc_toolbar" />
 
 
     <LinearLayout
-        android:id="@+id/linearlayout1"
+        android:id="@+id/gc_linearlayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardView"
+            android:id="@+id/gc_cardView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -123,7 +123,7 @@
                 android:paddingBottom="5dp">
 
                 <ImageView
-                    android:id="@+id/emoji"
+                    android:id="@+id/gc_emoji"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_gravity="center_vertical"
@@ -133,7 +133,7 @@
 
 
                 <EditText
-                    android:id="@+id/etMessage"
+                    android:id="@+id/gc_etMessage"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
@@ -147,7 +147,7 @@
                     android:textSize="14sp" />
 
                 <ImageView
-                    android:id="@+id/attachment"
+                    android:id="@+id/gc_attachment"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_gravity="center_vertical"
@@ -158,7 +158,7 @@
                     tools:ignore="VectorDrawableCompat" />
 
                 <ImageView
-                    android:id="@+id/camera"
+                    android:id="@+id/gc_camera"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -171,7 +171,7 @@
         </androidx.cardview.widget.CardView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabSend"
+            android:id="@+id/gc_fabSend"
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_margin="5dp"
@@ -182,7 +182,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/multiple_items"
+        android:id="@+id/gc_multiple_items"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:layout_alignParentStart="true"
@@ -216,7 +216,7 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/layoutDocument"
+                        android:id="@+id/gc_layoutDocument"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -238,7 +238,7 @@
 
                     <LinearLayout
 
-                        android:id="@+id/layoutcamera"
+                        android:id="@+id/gc_layoutcamera"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -259,7 +259,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/layoutgallery"
+                        android:id="@+id/gc_layoutgallery"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -289,7 +289,7 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/layoutaudio"
+                        android:id="@+id/gc_layoutaudio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -310,7 +310,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/layoutlocation"
+                        android:id="@+id/gc_layoutlocation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -331,7 +331,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/layoutcontact"
+                        android:id="@+id/gc_layoutcontact"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -361,16 +361,13 @@
 
 
     <com.devlomi.record_view.RecordView
-
-        android:id="@+id/record_view"
-
+        android:id="@+id/gc_record_view"
         android:layout_width="match_parent"
-
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerVertical="true"
         android:layout_margin="6dp"
-        android:layout_toStartOf="@+id/record_button"
+        android:layout_toStartOf="@+id/gc_record_button"
         android:visibility="visible"
         app:counter_time_color="#ff0000"
         app:slide_to_cancel_arrow="@drawable/ic_arrow_back"
@@ -381,13 +378,11 @@
         tools:ignore="NotSibling" />
 
     <com.devlomi.record_view.RecordButton
-
-        android:id="@+id/record_button"
+        android:id="@+id/gc_record_button"
         android:layout_width="55dp"
         android:layout_height="55dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-
         android:layout_centerVertical="true"
         android:layout_margin="6dp"
         android:layout_marginEnd="5dp"
@@ -404,13 +399,13 @@
 
 
     <RelativeLayout
-        android:id="@+id/imagelayout"
+        android:id="@+id/gc_imagelayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">
 
         <ImageView
-            android:id="@+id/user_chat_image"
+            android:id="@+id/gc_user_chat_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitXY"

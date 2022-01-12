@@ -120,6 +120,9 @@ public class DialogPreviewSendImage {
         startTime = dialog.findViewById(R.id.tv_start_time);
 
     }
+    public interface OnCallBacks {
+        public void onButtonSendClick();
+    }
 
     public void show(final OnCallBacks onCallBacks) {
 
@@ -386,9 +389,7 @@ public class DialogPreviewSendImage {
         });
     }
 
-    public interface OnCallBacks {
-        public void onButtonSendClick();
-    }
+
 
 //    //pause video
 //    public void setPause() {

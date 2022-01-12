@@ -79,7 +79,8 @@ import retrofit2.Retrofit;
 public class StatusFragment extends Fragment {
     Bitmap bitmap;
     String encodedImage;
-    public static final String UPLOAD_URL = ApiClient.BASE_URL + "ApiAuthentication/updateProfile.php";
+    public static final String UPLOAD_URL = ApiClient.BASE_URL + "updateProfile.php";
+  //  public static final String UPLOAD_URL = ApiClient.BASE_URL + "ApiAuthentication/updateProfile.php";
     private static final int STORAGE_PERMISSION_CODE = 4655;
     FragmentStatusBinding binding;
     ProgressDialog progressDialog;

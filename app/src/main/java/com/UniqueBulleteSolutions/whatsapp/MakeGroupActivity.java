@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -43,7 +44,7 @@ public class MakeGroupActivity extends AppCompatActivity {
     private String sid;
     Uri sFile;
     Bitmap bitmap;
-    String encodedImage;
+    String encodedImage = "";
 
 
     ApiInterface apiInterface;
@@ -61,7 +62,15 @@ public class MakeGroupActivity extends AppCompatActivity {
 
         list.addAll(CallAdapter.getSelectList());
         list2.addAll(CallAdapter.getSelectList());
-        sid = MainActivity.getCUID();
+
+
+
+            SharedPreferences sp = getSharedPreferences("UserCredentials" , MODE_PRIVATE);
+            if(sp.contains("CUP")){
+                sid = sp.getString("CUID" ,"0");
+            }
+
+
         Users user = new Users();
         user.setId(sid);
         list2.add(user);
@@ -108,7 +117,9 @@ public class MakeGroupActivity extends AppCompatActivity {
                     Toast.makeText(MakeGroupActivity.this, "please enter the group title", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    createGroup(binding.etGroupTitle.getText().toString().trim());
+
+                        createGroup(binding.etGroupTitle.getText().toString().trim());
+
                 }
             }
         });
@@ -143,8 +154,10 @@ public class MakeGroupActivity extends AppCompatActivity {
                                   }
                               });
                            }
-                            Toast.makeText(MakeGroupActivity.this, "group created successfully...", Toast.LENGTH_SHORT).show();
+                         //   Toast.makeText(MakeGroupActivity.this, "group created successfully...", Toast.LENGTH_SHORT).show();
 
+                            startActivity(new Intent(MakeGroupActivity.this,MainActivity.class));
+                           finishAffinity();
 
                         } else {
                             Toast.makeText(MakeGroupActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
@@ -154,11 +167,10 @@ public class MakeGroupActivity extends AppCompatActivity {
                     Log.e("exp", e.getLocalizedMessage());
                 }
             }
-
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
-                progressDialog.dismiss();
-                Log.e("failure", t.getLocalizedMessage());
+               // progressDialog.dismiss();
+                Log.e("failure", t.getMessage());
             }
         });
     }

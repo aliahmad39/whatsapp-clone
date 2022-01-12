@@ -12,8 +12,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
     public static Retrofit RETROFIT = null;
-  // public static String BASE_URL = "http://192.168.0.105/";
-  public static String BASE_URL = "https://freechatingapp.000webhostapp.com/";
+   public static String BASE_URL = "http://192.168.0.105/ApiAuthentication/";
+ // public static String BASE_URL = "https://freechatingapp.000webhostapp.com/";
 
 
     public static Retrofit getClient() {

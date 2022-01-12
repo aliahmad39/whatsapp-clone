@@ -141,7 +141,8 @@ public class CallAdapter extends RecyclerView.Adapter implements Filterable {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Users users = list.get(position);
-        String path = ApiClient.BASE_URL + "ApiAuthentication/profileImages/" + users.getUserPic();
+      //  String path = ApiClient.BASE_URL + "ApiAuthentication/profileImages/" + users.getUserPic();
+        String path = ApiClient.BASE_URL + "profileImages/" + users.getUserPic();
 
 
         if (holder.getClass() == ChatViewHolder.class) {
@@ -201,11 +202,11 @@ public class CallAdapter extends RecyclerView.Adapter implements Filterable {
                         intent.putExtra("currentUid", CUID);
                         intent.putExtra("currentUPic", users.getUserPic());
                         intent.putExtra("currentUStatus", users.getUserStatus());
-                        // intent.putExtra("profilePic", users.getProfilePic());
+                       //  intent.putExtra("profilePic", users.getProfilePic());
 
                         context.startActivity(intent);
 
-
+                        Toast.makeText(context, "Chat click", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

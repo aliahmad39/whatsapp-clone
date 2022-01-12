@@ -1,6 +1,8 @@
 package com.UniqueBulleteSolutions.whatsapp.Models;
 
-public class Users {
+
+
+public class Users  {
     String id , email , password , phoneNo , name , status , message  ,userPic , time ,userStatus , personStatus , lastMessage;
     String index , userAbout , userName;
     String receiver_id , sender_id;

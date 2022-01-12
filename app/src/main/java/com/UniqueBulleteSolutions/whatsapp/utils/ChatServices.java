@@ -35,6 +35,7 @@ public class ChatServices {
         duration.setText(timeConversion((long) total_duration));
 
         progress.setMax((int) total_duration);
+
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {

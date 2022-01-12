@@ -155,6 +155,9 @@ public class ChatDetailActivity extends AppCompatActivity {
     private AudioRecorder audioRecorder;
     private File recordFile;
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -173,7 +176,8 @@ public class ChatDetailActivity extends AppCompatActivity {
         userName = getIntent().getStringExtra("userName");
         senderId = getIntent().getStringExtra("currentUid");
         userStatus = getIntent().getStringExtra("currentUStatus");
-        String path = ApiClient.BASE_URL + "ApiAuthentication/profileImages/" + getIntent().getStringExtra("currentUPic");
+       // String path = ApiClient.BASE_URL + "ApiAuthentication/profileImages/" + getIntent().getStringExtra("currentUPic");
+        String path = ApiClient.BASE_URL + "profileImages/" + getIntent().getStringExtra("currentUPic");
 
         Toast.makeText(this, "CUID :"+senderId, Toast.LENGTH_SHORT).show();
         Toast.makeText(this, "RID :"+receiverId, Toast.LENGTH_SHORT).show();
@@ -218,7 +222,8 @@ public class ChatDetailActivity extends AppCompatActivity {
 //                    {
 //                        while (x >= 0){
 //                            try {
-//                                sleep(1000);
+//                                sleep(60000);
+//                                Toast.makeText(ChatDetailActivity.this, "sleeping", Toast.LENGTH_SHORT).show();
 //                                getMessages();
 //                            } catch (InterruptedException e) {
 //                                e.printStackTrace();
@@ -239,35 +244,8 @@ public class ChatDetailActivity extends AppCompatActivity {
 //            }
 //        };
 //        handler.post(runnable);
-//        thread =new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//             //   getMessages();
-////                while (x >= 0){
-////                    try {
-////                        sleep(1000);
-////                        getMessages();
-////                    } catch (InterruptedException e) {
-////                        e.printStackTrace();
-////                    }
-////
-////                }
-////                Toast.makeText(ChatDetailActivity.this, "hello", Toast.LENGTH_SHORT).show();
-////                try {
-////                    while(true){
-////                        getMessages();
-////                    }
-////
-////                } catch (Exception e) {
-////
-//////                    Toast.makeText(ChatDetailActivity.this, "thread catch run", Toast.LENGTH_SHORT).show();
-////                   // thread.start();
-////                }
-//
-//            }
-//        });
 
-//thread.start();
+
 
 
 //         getMessages();
@@ -327,12 +305,10 @@ public class ChatDetailActivity extends AppCompatActivity {
 
                                 }
                             });
-
                         }
                     });
-
                     try {
-                        sleep(3000);
+                        sleep(30000);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -341,18 +317,16 @@ public class ChatDetailActivity extends AppCompatActivity {
         });
         thread.start();
 
-
-
         binding.leftArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                startActivity(new Intent(ChatDetailActivity.this , MainActivity.class));
+                finishAffinity();
             }
         });
 
         senderRoom = senderId + receiverId;
         receiverRoom = receiverId + senderId;
-
 
         Handler handler1 = new Handler();
         binding.etMessage.addTextChangedListener(new TextWatcher() {
@@ -451,7 +425,6 @@ public class ChatDetailActivity extends AppCompatActivity {
             }
         });
 
-
         binding.camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -461,9 +434,10 @@ public class ChatDetailActivity extends AppCompatActivity {
         });
 
 
+
         audioRecorder = new AudioRecorder();
 
-        recordView = (RecordView) findViewById(R.id.record_view);
+        RecordView recordView = (RecordView) findViewById(R.id.record_view);
         final RecordButton recordButton = (RecordButton) findViewById(R.id.record_button);
 
         //IMPORTANT
@@ -473,11 +447,6 @@ public class ChatDetailActivity extends AppCompatActivity {
         recordButton.setOnRecordClickListener(new OnRecordClickListener() {
             @Override
             public void onClick(View v) {
-                if(!checkPermissionFromDevice()){
-                    startRecording();
-                }else{
-                    requestPermission();
-                }
                 Toast.makeText(ChatDetailActivity.this, "RECORD BUTTON CLICKED", Toast.LENGTH_SHORT).show();
                 Log.d("RecordButton", "RECORD BUTTON CLICKED");
             }
@@ -499,6 +468,77 @@ public class ChatDetailActivity extends AppCompatActivity {
 //
 //        recordView.setCustomSounds(R.raw.record_start, R.raw.record_finished, 0);
 
+
+        recordView.setOnRecordListener(new OnRecordListener() {
+            @Override
+            public void onStart() {
+                if (!checkPermissionFromDevice()) {
+                    binding.etMessage.setVisibility(View.INVISIBLE);
+                    binding.emoji.setVisibility(View.INVISIBLE);
+                    binding.camera.setVisibility(View.INVISIBLE);
+                    binding.attachment.setVisibility(View.INVISIBLE);
+
+                    recordFile = new File(getFilesDir(), UUID.randomUUID().toString() + ".mp4");
+
+                    try {
+                        audioRecorder.start(recordFile.getPath());
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("RecordView", "onStart");
+                    Toast.makeText(ChatDetailActivity.this, "OnStartRecord", Toast.LENGTH_SHORT).show();
+
+                    Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                    if (vibrator != null) {
+                        vibrator.vibrate(100);
+                    }
+                } else {
+                    requestPermission();
+                }
+            }
+            @Override
+            public void onCancel() {
+                try {
+                    stopRecording(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(ChatDetailActivity.this, "onCancel", Toast.LENGTH_SHORT).show();
+
+                    Log.d("RecordView", "onCancel");
+                }
+
+
+            }
+
+            @Override
+            public void onFinish(long recordTime) {
+                binding.etMessage.setVisibility(View.VISIBLE);
+                binding.emoji.setVisibility(View.VISIBLE);
+                binding.camera.setVisibility(View.VISIBLE);
+                binding.attachment.setVisibility(View.VISIBLE);
+                stopRecording(false);
+
+
+                String time = getHumanTimeText(recordTime);
+
+                sendVoice();
+            }
+
+            @Override
+            public void onLessThanSecond() {
+                binding.etMessage.setVisibility(View.VISIBLE);
+                binding.emoji.setVisibility(View.VISIBLE);
+                binding.camera.setVisibility(View.VISIBLE);
+                binding.attachment.setVisibility(View.VISIBLE);
+                stopRecording(true);
+
+                Toast.makeText(ChatDetailActivity.this, "OnLessThanSecond", Toast.LENGTH_SHORT).show();
+                Log.d("RecordView", "onLessThanSecond");
+            }
+        });
+
+
         recordView.setOnBasketAnimationEndListener(new OnBasketAnimationEnd() {
             @Override
             public void onAnimationEnd() {
@@ -509,6 +549,61 @@ public class ChatDetailActivity extends AppCompatActivity {
                 Log.d("RecordView", "Basket Animation Finished");
             }
         });
+
+
+
+
+
+//        audioRecorder = new AudioRecorder();
+//        recordView = (RecordView) findViewById(R.id.record_view);
+//        final RecordButton recordButton = (RecordButton) findViewById(R.id.record_button);
+//
+//        //IMPORTANT
+//        recordButton.setRecordView(recordView);
+//        recordButton.setListenForRecord(true);
+//
+//        recordButton.setOnRecordClickListener(new OnRecordClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(!checkPermissionFromDevice()){
+//                    startRecording();
+//                    Log.d("RecordView", "record button click");
+//                    Toast.makeText(ChatDetailActivity.this, "record btn click", Toast.LENGTH_SHORT).show();
+//                }else{
+//                    requestPermission();
+//                    Log.d("RecordView", "record button click permission");
+//                }
+//                Toast.makeText(ChatDetailActivity.this, "RECORD BUTTON CLICKED", Toast.LENGTH_SHORT).show();
+//                Log.d("RecordView", "RECORD BUTTON CLICKED");
+//            }
+//        });
+//
+//
+//        //Cancel Bounds is when the Slide To Cancel text gets before the timer . default is 8
+//        recordView.setCancelBounds(8);
+//
+//
+////        recordView.setSmallMicColor(Color.parseColor("#c2185b"));
+//
+//        //prevent recording under one Second
+//        recordView.setLessThanSecondAllowed(false);
+//
+////
+////        recordView.setSlideToCancelText("Slide To Cancel");
+////
+////
+////        recordView.setCustomSounds(R.raw.record_start, R.raw.record_finished, 0);
+//
+//        recordView.setOnBasketAnimationEndListener(new OnBasketAnimationEnd() {
+//            @Override
+//            public void onAnimationEnd() {
+//                binding.etMessage.setVisibility(View.VISIBLE);
+//                binding.emoji.setVisibility(View.VISIBLE);
+//                binding.camera.setVisibility(View.VISIBLE);
+//                binding.attachment.setVisibility(View.VISIBLE);
+//                Log.d("RecordView", "Basket Animation Finished");
+//            }
+//        });
 
 
     }
@@ -753,6 +848,8 @@ public class ChatDetailActivity extends AppCompatActivity {
 
                 recordFile = new File(getFilesDir(), UUID.randomUUID().toString() + ".opus");
 
+                Toast.makeText(ChatDetailActivity.this, "OnStartRecord", Toast.LENGTH_SHORT).show();
+
                 try {
                     audioRecorder.start(recordFile.getPath());
 
@@ -760,7 +857,7 @@ public class ChatDetailActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 Log.d("RecordView", "onStart");
-                Toast.makeText(ChatDetailActivity.this, "OnStartRecord", Toast.LENGTH_SHORT).show();
+
 
                 Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                 if (vibrator != null) {
@@ -780,7 +877,6 @@ public class ChatDetailActivity extends AppCompatActivity {
 
 
             }
-
             @Override
             public void onFinish(long recordTime) {
                 binding.etMessage.setVisibility(View.VISIBLE);
@@ -852,45 +948,47 @@ public class ChatDetailActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        apiInterface.setStatus("online", senderId).enqueue(new Callback<UserResponse>() {
-            @Override
-            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-                if (response != null) {
-                    if (response.body().getStatus().equals("1")) {
-                        //              Toast.makeText(ChatDetailActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+        if (!senderId.isEmpty()) {
+            apiInterface.setStatus("online", senderId).enqueue(new Callback<UserResponse>() {
+                @Override
+                public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                    if (response != null) {
+                        if (response.body().getStatus().equals("1")) {
+                            //              Toast.makeText(ChatDetailActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<UserResponse> call, Throwable t) {
-                //    Toast.makeText(ChatDetailActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<UserResponse> call, Throwable t) {
+                    //    Toast.makeText(ChatDetailActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     @Override
     protected void onPause() {
-
-        apiInterface.setStatus("offline", senderId).enqueue(new Callback<UserResponse>() {
-            @Override
-            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-                if (response != null) {
-                    if (response.body().getStatus().equals("1")) {
-                        //   Toast.makeText(ChatDetailActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+        if (!senderId.isEmpty()) {
+            apiInterface.setStatus("offline", senderId).enqueue(new Callback<UserResponse>() {
+                @Override
+                public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                    if (response != null) {
+                        if (response.body().getStatus().equals("1")) {
+                            //   Toast.makeText(ChatDetailActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<UserResponse> call, Throwable t) {
-                //     Toast.makeText(ChatDetailActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<UserResponse> call, Throwable t) {
+                    //     Toast.makeText(ChatDetailActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
 
-        super.onPause();
-        //  player.pause();
+            super.onPause();
+            //  player.pause();
+        }
     }
 
 
@@ -1137,8 +1235,6 @@ public class ChatDetailActivity extends AppCompatActivity {
         } catch (Exception e) {
             Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
     public byte[] getBytes(InputStream inputStream) throws IOException {
@@ -1277,12 +1373,10 @@ public class ChatDetailActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (binding.multipleItems.getVisibility() == View.VISIBLE) {
             binding.multipleItems.setVisibility(View.GONE);
-        } else if(binding.etMessage.getText().toString().isEmpty()) {
-          //  binding.etMessage.clearFocus();
-        }else{
+        } else{
+            super.onBackPressed();
             startActivity(new Intent(this ,MainActivity.class));
             finishAffinity();
-            super.onBackPressed();
         }
     }
 
@@ -1306,7 +1400,15 @@ public class ChatDetailActivity extends AppCompatActivity {
         String json = sp.getString(receiverId , null);
         Type type = new TypeToken<ArrayList<MessageModel>>() {}.getType();
 
-        data = gson.fromJson(json , type);
+        ArrayList<MessageModel> savedData = gson.fromJson(json , type);
+
+
+
+        if(savedData != null && savedData.size() >0){
+            data.clear();
+            data.addAll(savedData);
+        }
+
 
         //   chatAdapter.notifyDataSetChanged();
         //  binding.chatRecyclerView.hideShimmerAdapter();

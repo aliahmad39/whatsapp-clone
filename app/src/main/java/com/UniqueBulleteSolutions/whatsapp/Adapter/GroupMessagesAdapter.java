@@ -219,7 +219,8 @@ public class GroupMessagesAdapter extends RecyclerView.Adapter {
              if(!deleteLog.contains(messageModel.getMsgID())) {
                  if (messageModel.getMessage().equals("photo")) {
 
-                     String path = ApiClient.BASE_URL + "ApiAuthentication/groupData/images/" + messageModel.getFile_path();
+                    // String path = ApiClient.BASE_URL + "ApiAuthentication/groupData/images/" + messageModel.getFile_path();
+                     String path = ApiClient.BASE_URL + "groupData/images/" + messageModel.getFile_path();
 
                      setLayoutVisibility(viewHolder.senderMsg,View.GONE ,viewHolder.senderImage,View.VISIBLE,viewHolder.layoutVoice,View.GONE,viewHolder.layoutVideo,View.GONE,viewHolder.documents,View.GONE,viewHolder.layoutDocumentSize,View.GONE);
                      downloadFile(path, viewHolder.senderImage, null,null, null, null);
@@ -241,12 +242,14 @@ public class GroupMessagesAdapter extends RecyclerView.Adapter {
                  }
                  else if (messageModel.getMessage().equals("audio")) {
                      setLayoutVisibility(viewHolder.senderMsg,View.GONE ,viewHolder.senderImage,View.GONE,viewHolder.layoutVoice,View.VISIBLE,viewHolder.layoutVideo,View.GONE,viewHolder.documents,View.GONE,viewHolder.layoutDocumentSize,View.GONE);
-                     String path = ApiClient.BASE_URL + "ApiAuthentication/groupData/audio/" + messageModel.getFile_path();
+                   //  String path = ApiClient.BASE_URL + "ApiAuthentication/groupData/audio/" + messageModel.getFile_path();
+                     String path = ApiClient.BASE_URL + "groupData/audio/" + messageModel.getFile_path();
                      downloadFile(path, null,"audio" , viewHolder.tv_duration, viewHolder.musicProgress, viewHolder.play);
                  }
                  else if (messageModel.getMessage().equals("video")) {
                      setLayoutVisibility(viewHolder.senderMsg,View.GONE ,viewHolder.senderImage,View.GONE,viewHolder.layoutVoice,View.GONE,viewHolder.layoutVideo,View.VISIBLE,viewHolder.documents,View.GONE,viewHolder.layoutDocumentSize,View.GONE);
-                     String path = ApiClient.BASE_URL + "ApiAuthentication/groupData/videos/" + messageModel.getFile_path();
+                   //  String path = ApiClient.BASE_URL + "ApiAuthentication/groupData/videos/" + messageModel.getFile_path();
+                     String path = ApiClient.BASE_URL + "groupData/videos/" + messageModel.getFile_path();
                      downloadFile(path, null,null , null,null ,null);
                      viewHolder.playVideo.setOnClickListener(new View.OnClickListener() {
                          @Override
@@ -260,12 +263,18 @@ public class GroupMessagesAdapter extends RecyclerView.Adapter {
                  }
                  else if (messageModel.getMessage().equals("document")) {
 
-                     String path = ApiClient.BASE_URL + "ApiAuthentication/groupData/document/" + messageModel.getFile_path();
+                   //  String path = ApiClient.BASE_URL + "ApiAuthentication/groupData/document/" + messageModel.getFile_path();
+                     String path = ApiClient.BASE_URL + "groupData/document/" + messageModel.getFile_path();
                      setLayoutVisibility(viewHolder.senderMsg,View.GONE ,viewHolder.senderImage,View.GONE,viewHolder.layoutVoice,View.GONE,viewHolder.layoutVideo,View.GONE,viewHolder.documents,View.VISIBLE,viewHolder.layoutDocumentSize,View.VISIBLE);
                      if (messageModel.getExtension().toLowerCase().equals("pdf")) {
-                         viewHolder.documentImage.setImageResource(R.drawable.ic_pdf);
+                         if(viewHolder.documentImage != null){
+                             viewHolder.documentImage.setImageResource(R.drawable.ic_pdf);
+                         }
+
                      } else {
-                         viewHolder.documentImage.setImageResource(R.drawable.ic_file);
+                         if (viewHolder.documentImage != null){
+                             viewHolder.documentImage.setImageResource(R.drawable.ic_file);
+                     }
                      }
 
                      viewHolder.title.setText(messageModel.getFileName());
@@ -312,7 +321,8 @@ public class GroupMessagesAdapter extends RecyclerView.Adapter {
             if(!deleteLog.contains(messageModel.getMsgID())) {
                 if (messageModel.getMessage().equals("photo")) {
 
-                    String path = ApiClient.BASE_URL + "ApiAuthentication/groupData/images/" + messageModel.getFile_path();
+                  //  String path = ApiClient.BASE_URL + "ApiAuthentication/groupData/images/" + messageModel.getFile_path();
+                    String path = ApiClient.BASE_URL + "groupData/images/" + messageModel.getFile_path();
                     setLayoutVisibility(viewHolder.receiverMsg,View.GONE ,viewHolder.receiverImage,View.VISIBLE,viewHolder.layoutVoice,View.GONE,viewHolder.layoutVideo,View.GONE,viewHolder.documents,View.GONE,viewHolder.layoutDocumentSize,View.GONE);
                     downloadFile(path, viewHolder.receiverImage, null,null, null, null);
 
@@ -327,14 +337,16 @@ public class GroupMessagesAdapter extends RecyclerView.Adapter {
                     });
                 }
                 else if (messageModel.getMessage().equals("audio")) {
-                    String path = ApiClient.BASE_URL + "ApiAuthentication/groupData/audio/" + messageModel.getFile_path();
+                  //  String path = ApiClient.BASE_URL + "ApiAuthentication/groupData/audio/" + messageModel.getFile_path();
+                    String path = ApiClient.BASE_URL + "groupData/audio/" + messageModel.getFile_path();
                     setLayoutVisibility(viewHolder.receiverMsg,View.GONE ,viewHolder.receiverImage,View.GONE,viewHolder.layoutVoice,View.VISIBLE,viewHolder.layoutVideo,View.GONE,viewHolder.documents,View.GONE,viewHolder.layoutDocumentSize,View.GONE);
                     downloadFile(path, null,"audio" , viewHolder.tv_duration, viewHolder.musicProgress, viewHolder.play);
 
                 }
                 else if (messageModel.getMessage().equals("video")) {
                     setLayoutVisibility(viewHolder.receiverMsg,View.GONE ,viewHolder.receiverImage,View.GONE,viewHolder.layoutVoice,View.GONE,viewHolder.layoutVideo,View.VISIBLE,viewHolder.documents,View.GONE,viewHolder.layoutDocumentSize,View.GONE);
-                    String path = ApiClient.BASE_URL + "ApiAuthentication/groupData/videos/" + messageModel.getFile_path();
+                 //   String path = ApiClient.BASE_URL + "ApiAuthentication/groupData/videos/" + messageModel.getFile_path();
+                    String path = ApiClient.BASE_URL + "groupData/videos/" + messageModel.getFile_path();
                     downloadFile(path, null,null , null,null ,null);
                     viewHolder.playVideo.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -346,7 +358,8 @@ public class GroupMessagesAdapter extends RecyclerView.Adapter {
                 }
                 else if (messageModel.getMessage().equals("document")) {
 
-                    String path = ApiClient.BASE_URL + "ApiAuthentication/groupData/document/" + messageModel.getFile_path();
+                    //String path = ApiClient.BASE_URL + "ApiAuthentication/groupData/document/" + messageModel.getFile_path();
+                    String path = ApiClient.BASE_URL + "groupData/document/" + messageModel.getFile_path();
 
                     setLayoutVisibility(viewHolder.receiverMsg,View.GONE ,viewHolder.receiverImage,View.GONE,viewHolder.layoutVoice,View.GONE,viewHolder.layoutVideo,View.GONE,viewHolder.documents,View.VISIBLE,viewHolder.layoutDocumentSize,View.VISIBLE);
                     if (messageModel.getExtension().toLowerCase().equals("pdf")) {
@@ -398,7 +411,7 @@ public class GroupMessagesAdapter extends RecyclerView.Adapter {
             private Boolean download() {
                 try {
                     File file = makeFile("Download", filename);
-                    if (file.exists())
+                    if (file != null && file.exists())
                         return true;
                     //file.delete();
                     FileOutputStream fs = new FileOutputStream(file);
@@ -571,8 +584,7 @@ public class GroupMessagesAdapter extends RecyclerView.Adapter {
         layoutVoice.setVisibility(lv);
         layoutVideo.setVisibility(lvv);
         layoutDocuments.setVisibility(dv);
-        layoutDocumentSize.setVisibility(dsv);
-
+         layoutDocumentSize.setVisibility(dsv);
 
     }
 
@@ -588,23 +600,23 @@ public class GroupMessagesAdapter extends RecyclerView.Adapter {
         public ReceiverViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            receiverMsg = itemView.findViewById(R.id.tvReceiver);
-            uname = itemView.findViewById(R.id.tv_uname);
-            receiverTime = itemView.findViewById(R.id.tvReceiverTime);
-            receiverImage = itemView.findViewById(R.id.attachImageReceiver);
-            layoutVideo = itemView.findViewById(R.id.layout_video_receiver);
-            layoutVoice = itemView.findViewById(R.id.layout_voice_receiver);
-            play = itemView.findViewById(R.id.btn_play_audio_receiver);
-            playVideo = itemView.findViewById(R.id.video_play);
-            musicProgress = itemView.findViewById(R.id.sbProgress);
-            tv_duration = itemView.findViewById(R.id.tv_time);
-            documents = itemView.findViewById(R.id.layout_document_receiver);
-            title = itemView.findViewById(R.id.tvDocument);
-            download = itemView.findViewById(R.id.downloadDocument);
-            layoutDocumentSize = itemView.findViewById(R.id.layout_document_size);
-            size = itemView.findViewById(R.id.tvSize);
-            extn = itemView.findViewById(R.id.tvExt);
-            documentImage = itemView.findViewById(R.id.document_image);
+            receiverMsg = itemView.findViewById(R.id.gr_tvReceiver);
+            uname = itemView.findViewById(R.id.gr_tv_uname);
+            receiverTime = itemView.findViewById(R.id.gr_tvReceiverTime);
+            receiverImage = itemView.findViewById(R.id.gr_attachImageReceiver);
+            layoutVideo = itemView.findViewById(R.id.gr_layout_video_receiver);
+            layoutVoice = itemView.findViewById(R.id.gr_layout_voice_receiver);
+            play = itemView.findViewById(R.id.gr_btn_play_audio_receiver);
+            playVideo = itemView.findViewById(R.id.gr_video_play);
+            musicProgress = itemView.findViewById(R.id.gr_sbProgress);
+            tv_duration = itemView.findViewById(R.id.gr_tv_time);
+            documents = itemView.findViewById(R.id.gr_layout_document_receiver);
+            title = itemView.findViewById(R.id.gr_tvDocument);
+            download = itemView.findViewById(R.id.gr_downloadDocument);
+            layoutDocumentSize = itemView.findViewById(R.id.gr_layout_document_size);
+            size = itemView.findViewById(R.id.gr_tvSize);
+            extn = itemView.findViewById(R.id.gr_tvExt);
+            documentImage = itemView.findViewById(R.id.gr_document_image);
         }
     }
 
@@ -620,23 +632,23 @@ public class GroupMessagesAdapter extends RecyclerView.Adapter {
         public SenderViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            senderMsg = itemView.findViewById(R.id.tvSender);
-            uname = itemView.findViewById(R.id.tv_uname);
-            senderTime = itemView.findViewById(R.id.tvSenderTime);
-            senderImage = itemView.findViewById(R.id.attachImageSender);
-            playVideo = itemView.findViewById(R.id.video_play);
-            layoutVideo = itemView.findViewById(R.id.layout_video_sender);
-            layoutVoice = itemView.findViewById(R.id.layout_voice_sender);
-            play = itemView.findViewById(R.id.btn_play_audio_sender);
-            musicProgress = itemView.findViewById(R.id.sbProgress);
-            tv_duration = itemView.findViewById(R.id.tv_time);
-            documents = itemView.findViewById(R.id.layout_document_sender);
-            title = itemView.findViewById(R.id.tvDocument);
-            download = itemView.findViewById(R.id.downloadDocument);
-            layoutDocumentSize = itemView.findViewById(R.id.layout_document_size);
-            size = itemView.findViewById(R.id.tvSize);
-            extn = itemView.findViewById(R.id.tvExt);
-            documentImage = itemView.findViewById(R.id.document_image);
+            senderMsg = itemView.findViewById(R.id.gs_tvSender);
+            uname = itemView.findViewById(R.id.gs_tv_uname);
+            senderTime = itemView.findViewById(R.id.gs_tvSenderTime);
+            senderImage = itemView.findViewById(R.id.gs_attachImageSender);
+            playVideo = itemView.findViewById(R.id.gs_video_play);
+            layoutVideo = itemView.findViewById(R.id.gs_layout_video_sender);
+            layoutVoice = itemView.findViewById(R.id.gs_layout_voice_sender);
+            play = itemView.findViewById(R.id.gs_btn_play_audio_sender);
+            musicProgress = itemView.findViewById(R.id.gs_sbProgress);
+            tv_duration = itemView.findViewById(R.id.gs_tv_time);
+            documents = itemView.findViewById(R.id.gs_layout_document_sender);
+            title = itemView.findViewById(R.id.gs_tvDocument);
+            download = itemView.findViewById(R.id.gs_downloadDocument);
+            layoutDocumentSize = itemView.findViewById(R.id.gs_layout_document_size);
+            size = itemView.findViewById(R.id.gs_tvSize);
+            extn = itemView.findViewById(R.id.gs_tvExt);
+            documentImage = itemView.findViewById(R.id.gs_document_image);
         }
     }
 

@@ -14,6 +14,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Query;
 
 public interface ApiInterface {
 
@@ -262,6 +263,12 @@ public interface ApiInterface {
     @POST("getstatus.php")
     Call<Users> getStatus(
             @Field("userID") String userID
+    );
+
+
+    @GET("search")
+    Call<Users> getS(
+            @Query("userID") String userID
     );
 
 }
