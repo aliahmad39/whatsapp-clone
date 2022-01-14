@@ -27,9 +27,8 @@ All features of whatsApp using functionality of Rest APIs implemented on Sql Ser
 
 
 <p float="left">
-
-  <img src="https://github.com/aliahmad39/whatsapp-clone/blob/main/art/Screenshot_20220114_132028.jpg" width="150" height="280">
 <img src="https://github.com/aliahmad39/whatsapp-clone/blob/main/art/Screenshot_20220114_125225.jpg" width="150" height="280">
+  <img src="https://github.com/aliahmad39/whatsapp-clone/blob/main/art/Screenshot_20220114_132028.jpg" width="150" height="280">
   <img src="https://github.com/aliahmad39/whatsapp-clone/blob/main/art/Screenshot_20220114_125418.jpg" width="150" height="280">
 <img src="https://github.com/aliahmad39/whatsapp-clone/blob/main/art/Screenshot_20220114_125453.jpg" width="150" height="280">
 </p>
